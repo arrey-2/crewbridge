@@ -1,11 +1,11 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
+import { FormEvent, Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabaseClient } from '@/lib/supabase';
 
-export default function LoginPage() {
+function LoginPageContent() {
   const router = useRouter();
   const params = useSearchParams();
   const message = params.get('message');
@@ -50,5 +50,13 @@ export default function LoginPage() {
         No account? <Link className="text-amber-400" href="/signup">Create one</Link>
       </p>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="mx-auto max-w-md rounded-xl border border-slate-700 bg-panel p-6">Loading...</div>}>
+      <LoginPageContent />
+    </Suspense>
   );
 }
