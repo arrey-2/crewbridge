@@ -14,7 +14,7 @@ export default function LandingPage() {
         <div className="pointer-events-none absolute -bottom-8 left-1/4 h-72 w-72 rounded-full border-[11px] border-orange-300/45" />
         <div className="pointer-events-none absolute right-[-4rem] top-24 hidden w-[28rem] rotate-[-7deg] rounded-2xl border border-white/15 bg-white/5 p-4 opacity-55 blur-[1.6px] lg:block">
           <div className="space-y-2 rounded-xl bg-black/60 p-4">
-            <p className="text-xs text-slate-300">Live Ops Panel</p>
+            <p className="text-xs text-slate-300">{t('home_live_label')}</p>
             <div className="h-3 w-2/3 rounded bg-white/20" />
             <div className="h-3 w-1/2 rounded bg-white/20" />
             <div className="h-20 rounded bg-violet-500/20" />
@@ -22,14 +22,12 @@ export default function LandingPage() {
         </div>
 
         <div className="relative z-10 mx-auto max-w-5xl text-center">
-          <p className="mb-5 inline-flex rounded-full border border-white/20 bg-white/5 px-3 py-1 text-xs uppercase tracking-widest text-slate-300">AI Operating System for Bilingual Construction Teams</p>
+          <p className="mb-5 inline-flex rounded-full border border-white/20 bg-white/5 px-3 py-1 text-xs uppercase tracking-widest text-slate-300">{t('hero_badge')}</p>
           <h1 className="text-5xl font-semibold leading-[1.05] md:text-7xl">
-            <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-orange-300 bg-clip-text text-transparent">Stop costly miscommunication.</span>
-            <br />Run every job in two languages.
+            <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-orange-300 bg-clip-text text-transparent">{t('hero_title_a')}</span>
+            <br />{t('hero_title_b')}
           </h1>
-          <p className="mx-auto mt-6 max-w-3xl text-lg text-slate-300">
-            {t('hero_sub')} CrewBridge combines translation, safety communication, confirmations, templates, and reports so every crew member gets clear instructions the first time.
-          </p>
+          <p className="mx-auto mt-6 max-w-3xl text-lg text-slate-300">{t('hero_sub')}</p>
           <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
             <Link href="/signup" className="btn-primary">{t('cta_primary')}</Link>
             <Link href="/login" className="btn-secondary">{t('cta_secondary')}</Link>
@@ -39,9 +37,9 @@ export default function LandingPage() {
 
       <section className="grid gap-4 md:grid-cols-3">
         {[
-          ['Translate', 'Owner ↔ worker communication with trade-specific jobsite phrasing.'],
-          ['Coordinate', 'Daily briefs, toolbox talks, and task confirmations in one workflow.'],
-          ['Document', 'Searchable logs and polished bilingual reports for clients and compliance.']
+          [t('home_translate_title'), t('home_translate_desc')],
+          [t('home_coord_title'), t('home_coord_desc')],
+          [t('home_doc_title'), t('home_doc_desc')]
         ].map(([title, body]) => (
           <article key={title} className="glass p-6">
             <h3 className="text-2xl font-semibold">{title}</h3>
@@ -53,21 +51,21 @@ export default function LandingPage() {
       <section className="panel overflow-hidden">
         <div className="grid md:grid-cols-2">
           <div className="p-7 md:p-9">
-            <p className="text-sm uppercase tracking-wider text-slate-400">Operations Preview</p>
-            <h2 className="mt-2 text-3xl font-semibold">Everything your foreman needs each morning</h2>
+            <p className="text-sm uppercase tracking-wider text-slate-400">{t('home_preview_label')}</p>
+            <h2 className="mt-2 text-3xl font-semibold">{t('home_preview_title')}</h2>
             <div className="mt-5 grid gap-2 text-slate-300">
-              <p>• Daily Brief Generator</p>
-              <p>• Toolbox Safety Briefs</p>
-              <p>• Crew Confirmations & Clarifications</p>
-              <p>• Job Logs + Professional Reports</p>
+              <p>• {t('home_preview_1')}</p>
+              <p>• {t('home_preview_2')}</p>
+              <p>• {t('home_preview_3')}</p>
+              <p>• {t('home_preview_4')}</p>
             </div>
           </div>
           <div className="border-l border-white/10 bg-gradient-to-b from-indigo-500/10 to-orange-500/10 p-7">
             <div className="glass space-y-3 p-4">
-              <div className="rounded-lg bg-white/5 p-3 text-sm">Owner: Check trench depth before laying pipe.</div>
-              <div className="rounded-lg bg-violet-500/20 p-3 text-sm">Crew: Revisen la profundidad de la zanja antes de tender la tubería.</div>
-              <div className="rounded-lg border border-amber-300/30 bg-amber-400/10 p-3 text-sm text-amber-200">⚠️ Safety flag: Verify controls before starting excavation work.</div>
-              <div className="rounded-lg bg-white/5 p-3 text-xs text-slate-300">Crew confirmation: <span className="text-white">Understood</span></div>
+              <div className="rounded-lg bg-white/5 p-3 text-sm">{t('home_live_owner')}</div>
+              <div className="rounded-lg bg-violet-500/20 p-3 text-sm">{t('home_live_worker')}</div>
+              <div className="rounded-lg border border-amber-300/30 bg-amber-400/10 p-3 text-sm text-amber-200">{t('home_live_safety')}</div>
+              <div className="rounded-lg bg-white/5 p-3 text-xs text-slate-300">{t('home_live_confirm')}</div>
             </div>
           </div>
         </div>

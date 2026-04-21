@@ -75,7 +75,7 @@ export async function POST(request: Request) {
         },
         {
           role: 'user',
-          content: `Trade: ${trade}\nTranslate from ${sourceLanguage} to ${targetLanguage}: ${input}`
+          content: `Trade: ${trade}\nSource language: ${sourceLanguage}\nTarget language: ${targetLanguage}\nInstruction: Preserve tone, structure, urgency, and practical field wording.\nText to translate: ${input}`
         }
       ]
     })
