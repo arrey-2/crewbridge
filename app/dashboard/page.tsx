@@ -44,33 +44,61 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <section className="glass p-6">
-        <h1 className="text-3xl font-semibold">{t('dashboard_title')}</h1>
-        <p className="mt-1 text-slate-300">{name}</p>
-        <div className="mt-5 grid gap-3 md:grid-cols-3 lg:grid-cols-6">
-          <div className="rounded-xl border border-white/10 bg-slate-900/60 p-4 lg:col-span-2"><p className="text-xs text-slate-400">Translations used today</p><p className="text-3xl font-semibold">{stats.daily}</p></div>
-          <div className="rounded-xl border border-white/10 bg-slate-900/60 p-4"><p className="text-xs text-slate-400">Active jobs</p><p className="text-2xl font-semibold">{stats.activeJobs}</p></div>
-          <div className="rounded-xl border border-white/10 bg-slate-900/60 p-4"><p className="text-xs text-slate-400">Pending confirmations</p><p className="text-2xl font-semibold">4</p></div>
-          <div className="rounded-xl border border-white/10 bg-slate-900/60 p-4"><p className="text-xs text-slate-400">Safety alerts</p><p className="text-2xl font-semibold text-amber-300">2</p></div>
-          <div className="rounded-xl border border-white/10 bg-slate-900/60 p-4"><p className="text-xs text-slate-400">Remaining today</p><p className="text-2xl font-semibold">{stats.remaining}</p></div>
+      <section className="panel p-6">
+        <p className="text-sm text-slate-400">Good morning</p>
+        <h1 className="text-3xl font-semibold">{t('dashboard_title')} • {name}</h1>
+        <div className="mt-6 grid gap-3 md:grid-cols-2 xl:grid-cols-5">
+          {[
+            ['Translations today', `${stats.daily}`],
+            ['Active jobs', `${stats.activeJobs}`],
+            ['Pending confirmations', '4'],
+            ['Safety alerts', '2'],
+            ['Remaining today', `${stats.remaining}`]
+          ].map(([label, value], idx) => (
+            <div key={label} className={`rounded-xl border p-4 ${idx === 0 ? 'border-violet-400/40 bg-violet-500/10' : 'border-white/10 bg-white/[0.02]'}`}>
+              <p className="text-xs text-slate-400">{label}</p>
+              <p className="mt-1 text-2xl font-semibold">{value}</p>
+            </div>
+          ))}
         </div>
         <div className="mt-5 flex flex-wrap gap-3">
-          <Link href="/translate" className="rounded-xl bg-gradient-to-r from-violet-500 to-blue-500 px-4 py-2 font-semibold">{t('cta_primary')}</Link>
-          <Link href="/templates" className="rounded-xl border border-white/20 px-4 py-2">Open Templates</Link>
-          <Link href="/logs" className="rounded-xl border border-white/20 px-4 py-2">{t('nav_logs')}</Link>
+          <Link href="/translate" className="btn-primary">{t('cta_primary')}</Link>
+          <Link href="/templates" className="btn-secondary">Open Templates</Link>
+          <Link href="/logs" className="btn-secondary">{t('nav_logs')}</Link>
         </div>
       </section>
 
-      <section className="glass p-6">
-        <h2 className="mb-3 text-xl font-semibold">Field operations snapshot</h2>
-        {recentJobs.length === 0 ? (
-          <EmptyState message="No jobs yet. Start your first translation to create a project activity trail." ctaHref="/translate" ctaLabel="New Translation" />
-        ) : (
-          <div className="grid gap-3 md:grid-cols-2">
-            {recentJobs.map((job) => <div key={job.id} className="rounded-xl border border-white/10 bg-slate-900/50 p-4"><p className="font-medium">{job.name}</p><p className="text-xs text-slate-400">Latest update synced • Ready for bilingual brief</p></div>)}
+      <div className="grid gap-5 lg:grid-cols-2">
+        <section className="panel p-6">
+          <h2 className="mb-3 text-xl font-semibold">Recent activity</h2>
+          {recentJobs.length === 0 ? (
+            <EmptyState message="No jobs yet. Start your first translation to create a project activity trail." ctaHref="/translate" ctaLabel="New Translation" />
+          ) : (
+            <div className="space-y-3">
+              {recentJobs.map((job) => (
+                <div key={job.id} className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
+                  <p className="font-medium">{job.name}</p>
+                  <p className="text-xs text-slate-400">Last update synced • awaiting crew confirmation</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+
+        <section className="panel p-6">
+          <h2 className="mb-3 text-xl font-semibold">Operations tools</h2>
+          <div className="space-y-3 text-sm">
+            {[
+              'Daily Brief Generator',
+              'Toolbox Safety Briefs',
+              'Incident + Work Order templates',
+              'Bilingual PDF field reports'
+            ].map((item) => (
+              <div key={item} className="rounded-xl border border-white/10 bg-white/[0.02] p-3">{item}</div>
+            ))}
           </div>
-        )}
-      </section>
+        </section>
+      </div>
     </div>
   );
 }

@@ -70,42 +70,61 @@ export default function TranslatePage() {
 
   return (
     <div className="space-y-5">
-      <div className="glass p-5"><h1 className="text-2xl font-semibold">{t('translate_title')}</h1><p className="text-slate-300">Translations remaining today: {remaining}</p></div>
-      <div className="glass grid gap-6 p-6 lg:grid-cols-2">
-        <div className="space-y-3">
-          <div className="flex gap-2">
-            <button onClick={() => setSenderRole('Owner')} className={`rounded-xl px-3 py-2 ${senderRole === 'Owner' ? 'bg-violet-500' : 'border border-white/20'}`}>Owner</button>
-            <button onClick={() => setSenderRole('Worker')} className={`rounded-xl px-3 py-2 ${senderRole === 'Worker' ? 'bg-violet-500' : 'border border-white/20'}`}>Worker</button>
+      <section className="panel p-5">
+        <h1 className="text-2xl font-semibold">{t('translate_title')}</h1>
+        <p className="text-slate-300">Translations remaining today: {remaining}</p>
+      </section>
+
+      <section className="grid gap-5 lg:grid-cols-[1.1fr_1fr]">
+        <div className="panel space-y-4 p-5">
+          <div className="inline-flex rounded-full border border-white/15 p-1">
+            {(['Owner', 'Worker'] as const).map((role) => (
+              <button key={role} onClick={() => setSenderRole(role)} className={`rounded-full px-4 py-1.5 text-sm ${senderRole === role ? 'bg-gradient-to-r from-violet-500 to-fuchsia-500' : 'text-slate-300'}`}>{role}</button>
+            ))}
           </div>
-          <select className="w-full" value={trade} onChange={(e) => setTrade(e.target.value)}>{TRADES.map((x) => <option key={x}>{x}</option>)}</select>
-          <input value={jobName} onChange={(e) => setJobName(e.target.value)} className="w-full" placeholder="Project name" maxLength={120} />
-          <textarea value={input} onChange={(e) => setInput(e.target.value.slice(0, 500))} rows={6} className="w-full" placeholder={`${sourceLang} instruction`} />
-          <p className="text-right text-xs text-slate-400">{charsRemaining} characters remaining</p>
-          <div className="flex gap-2">
-            <button onClick={useVoice} className="rounded-xl border border-white/20 px-3 py-2">Voice Input</button>
-            <button onClick={onTranslate} className="rounded-xl bg-gradient-to-r from-violet-500 to-blue-500 px-4 py-2 font-semibold">Translate</button>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            <select value={trade} onChange={(e) => setTrade(e.target.value)}>{TRADES.map((x) => <option key={x}>{x}</option>)}</select>
+            <input value={jobName} onChange={(e) => setJobName(e.target.value)} placeholder="Project name" maxLength={120} />
           </div>
-          <div className="flex flex-wrap gap-2">{Object.entries(templates).map(([n, v]) => <button key={n} onClick={() => setInput(v)} className="rounded-xl border border-white/20 px-3 py-1 text-xs">{n}</button>)}</div>
-          {loading && <div><p className="mb-1 text-sm">Translating</p><div className="h-2 rounded-full bg-slate-800"><div className="h-full w-full animate-pulse rounded-full bg-gradient-to-r from-violet-500 to-blue-500" /></div></div>}
+
+          <textarea value={input} onChange={(e) => setInput(e.target.value.slice(0, 500))} rows={7} placeholder={`${sourceLang} instruction`} />
+          <div className="flex items-center justify-between text-xs text-slate-400"><span>{sourceLang} input</span><span>{charsRemaining} characters remaining</span></div>
+
+          <div className="flex flex-wrap gap-2">
+            <button onClick={useVoice} className="btn-secondary">Voice Input</button>
+            <button onClick={onTranslate} className="btn-primary">Translate</button>
+            {Object.entries(templates).map(([n, v]) => <button key={n} onClick={() => setInput(v)} className="rounded-xl border border-white/20 px-3 py-2 text-xs hover:bg-white/5">{n}</button>)}
+          </div>
+
+          {loading && <div className="rounded-xl border border-violet-300/30 bg-violet-400/10 p-3 text-sm">Translating…<div className="mt-2 h-1.5 rounded-full bg-white/10"><div className="h-full w-full animate-pulse rounded-full bg-gradient-to-r from-violet-500 to-orange-400" /></div></div>}
           {warning && <div className="rounded-xl border border-amber-300/30 bg-amber-400/10 p-3 text-amber-200">{warning}</div>}
-          <div className="rounded-xl border border-white/10 bg-slate-900/60 p-3">
-            <p className="mb-2 text-sm font-medium text-slate-200">Task confirmation</p>
+
+          <div className="rounded-xl border border-white/10 bg-white/[0.02] p-3">
+            <p className="mb-2 text-sm font-medium">Crew confirmation</p>
             <div className="flex flex-wrap gap-2">
               {['Understood', 'Need clarification', 'Safety issue'].map((item) => (
-                <button key={item} onClick={() => setConfirmation(item)} className={`rounded-xl px-3 py-1.5 text-xs ${confirmation === item ? 'bg-orange-500/80 text-white' : 'border border-white/20'}`}>{item}</button>
+                <button key={item} onClick={() => setConfirmation(item)} className={`rounded-xl px-3 py-1.5 text-xs ${confirmation === item ? 'bg-orange-500 text-white' : 'border border-white/20'}`}>{item}</button>
               ))}
             </div>
-            {confirmation && <p className="mt-2 text-xs text-slate-400">Status captured: {confirmation}</p>}
           </div>
-          <div className="grid gap-2 sm:grid-cols-2">
-            <button onClick={() => setInput('Create a bilingual daily brief with tasks, crew assignments, materials, and safety reminders for today.')} className="rounded-xl border border-white/20 px-3 py-2 text-left text-sm hover:bg-white/5">Daily Brief Generator</button>
-            <button onClick={() => setInput('Create a bilingual toolbox talk for today with hazard controls, PPE requirements, and clear action steps.')} className="rounded-xl border border-white/20 px-3 py-2 text-left text-sm hover:bg-white/5">Toolbox Talk Generator</button>
-          </div>        </div>
-        <div className="grid gap-3">
-          <div className="rounded-xl border border-white/10 bg-slate-900/60 p-4"><h2 className="font-semibold">Original ({sourceLang})</h2><p className="mt-2 whitespace-pre-wrap text-slate-200">{input || 'Enter instruction to translate.'}</p></div>
-          <div className="rounded-xl border border-white/10 bg-slate-900/60 p-4"><h2 className="font-semibold">Translated ({targetLang})</h2><p className="mt-2 whitespace-pre-wrap text-slate-200">{output || 'Translation will appear here.'}</p></div>
         </div>
-      </div>
+
+        <div className="space-y-4">
+          <div className="panel p-5">
+            <h2 className="text-sm uppercase tracking-wider text-slate-400">Original ({sourceLang})</h2>
+            <p className="mt-2 whitespace-pre-wrap text-slate-200">{input || 'Enter instruction to translate.'}</p>
+          </div>
+          <div className="panel p-5">
+            <h2 className="text-sm uppercase tracking-wider text-slate-400">Translated ({targetLang})</h2>
+            <p className="mt-2 whitespace-pre-wrap text-slate-200">{output || 'Translation will appear here.'}</p>
+          </div>
+          <div className="panel p-5 text-sm text-slate-300">
+            <p className="font-medium text-white">Workflow helpers</p>
+            <p className="mt-2">Use Daily Brief and Safety templates to generate bilingual field communication faster.</p>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

@@ -31,20 +31,28 @@ export function Nav() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-black/60 backdrop-blur-2xl">
-      <div className="mx-auto flex max-w-[1240px] items-center justify-between gap-3 px-4 py-3 md:px-6">
+      <div className="relative mx-auto flex max-w-[1240px] items-center justify-between gap-3 px-4 py-3 md:px-6">
         <Link href="/" className="text-xl font-semibold tracking-tight">{APP_NAME}</Link>
-        <nav className="hidden items-center gap-2 md:flex">
-          {!isLanding && !isAuthPage && protectedLinks.map((link) => (
-            <Link key={link.href} href={link.href} className={cn('rounded-full px-3 py-1.5 text-sm text-slate-300 hover:bg-white/10 hover:text-white', pathname === link.href && 'bg-white/10 text-white')}>
-              {t(link.key)}
-            </Link>
-          ))}
-          {isLanding && (
-            <div className="rounded-full border border-white/10 bg-white/[0.03] px-2 py-1">
-              {['Platform', 'Solutions', 'Safety', 'Resources'].map((item) => <span key={item} className="px-3 py-1 text-sm text-slate-300">{item}</span>)}
-            </div>
-          )}
-        </nav>
+
+        {isLanding && (
+          <div className="pointer-events-none absolute left-1/2 hidden -translate-x-1/2 md:block">
+            <nav className="pointer-events-auto rounded-full border border-white/10 bg-white/[0.03] px-2 py-1">
+              {['Platform', 'Solutions', 'Safety', 'Resources'].map((item) => (
+                <button key={item} className="px-4 py-1 text-sm text-slate-300 transition hover:text-white">{item}</button>
+              ))}
+            </nav>
+          </div>
+        )}
+
+        {!isLanding && !isAuthPage && (
+          <nav className="hidden items-center gap-2 md:flex">
+            {protectedLinks.map((link) => (
+              <Link key={link.href} href={link.href} className={cn('rounded-full px-3 py-1.5 text-sm text-slate-300 hover:bg-white/10 hover:text-white', pathname === link.href && 'bg-white/10 text-white')}>
+                {t(link.key)}
+              </Link>
+            ))}
+          </nav>
+        )}
 
         <div className="flex items-center gap-2">
           <button onClick={() => setLang(lang === 'en' ? 'es' : 'en')} className="rounded-full border border-white/20 px-3 py-1.5 text-xs">{lang === 'en' ? 'EN / ES' : 'ES / EN'}</button>
