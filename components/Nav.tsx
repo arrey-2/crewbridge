@@ -11,15 +11,14 @@ const protectedLinks = [
   { href: '/dashboard', key: 'nav_dashboard' as const },
   { href: '/translate', key: 'nav_translate' as const },
   { href: '/logs', key: 'nav_logs' as const },
-  { href: '/account', key: 'nav_account' as const },
-  { href: '/templates', key: 'nav_templates' as const }
+  { href: '/templates', key: 'nav_templates' as const },
+  { href: '/account', key: 'nav_account' as const }
 ];
 
 export function Nav() {
   const pathname = usePathname();
   const router = useRouter();
   const { lang, setLang, t } = useLanguage();
-
   const isAuthPage = pathname === '/login' || pathname === '/signup';
   const isLanding = pathname === '/';
 
@@ -31,31 +30,33 @@ export function Nav() {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/70 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-        <Link href="/" className="text-lg font-semibold tracking-tight text-white">{APP_NAME}</Link>
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-black/60 backdrop-blur-2xl">
+      <div className="mx-auto flex max-w-[1240px] items-center justify-between gap-3 px-4 py-3 md:px-6">
+        <Link href="/" className="text-xl font-semibold tracking-tight">{APP_NAME}</Link>
         <nav className="hidden items-center gap-2 md:flex">
           {!isLanding && !isAuthPage && protectedLinks.map((link) => (
-            <Link key={link.href} href={link.href} className={cn('rounded-full px-3 py-1.5 text-sm text-slate-300 transition hover:bg-white/10 hover:text-white', pathname === link.href && 'bg-white/10 text-white')}>
+            <Link key={link.href} href={link.href} className={cn('rounded-full px-3 py-1.5 text-sm text-slate-300 hover:bg-white/10 hover:text-white', pathname === link.href && 'bg-white/10 text-white')}>
               {t(link.key)}
             </Link>
           ))}
-          <button
-            onClick={() => setLang(lang === 'en' ? 'es' : 'en')}
-            className="rounded-full border border-white/20 px-3 py-1.5 text-xs text-slate-200"
-          >
-            {lang === 'en' ? 'EN / ES' : 'ES / EN'}
-          </button>
           {isLanding && (
-            <>
-              <Link href="/login" className="rounded-full px-3 py-1.5 text-sm text-slate-200 hover:bg-white/10">{t('nav_login')}</Link>
-              <Link href="/signup" className="rounded-full bg-gradient-to-r from-violet-500 to-blue-500 px-4 py-1.5 text-sm font-semibold text-white shadow-lg shadow-violet-500/20">{t('nav_signup')}</Link>
-            </>
-          )}
-          {!isLanding && !isAuthPage && (
-            <button onClick={logout} className="rounded-full bg-gradient-to-r from-violet-500 to-blue-500 px-4 py-1.5 text-sm font-semibold text-white">Logout</button>
+            <div className="rounded-full border border-white/10 bg-white/[0.03] px-2 py-1">
+              {['Platform', 'Solutions', 'Safety', 'Resources'].map((item) => <span key={item} className="px-3 py-1 text-sm text-slate-300">{item}</span>)}
+            </div>
           )}
         </nav>
+
+        <div className="flex items-center gap-2">
+          <button onClick={() => setLang(lang === 'en' ? 'es' : 'en')} className="rounded-full border border-white/20 px-3 py-1.5 text-xs">{lang === 'en' ? 'EN / ES' : 'ES / EN'}</button>
+          {isLanding ? (
+            <>
+              <Link href="/login" className="hidden rounded-full px-3 py-1.5 text-sm text-slate-200 md:inline">{t('nav_login')}</Link>
+              <Link href="/signup" className="rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-black">{t('nav_signup')}</Link>
+            </>
+          ) : !isAuthPage ? (
+            <button onClick={logout} className="rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-black">Logout</button>
+          ) : null}
+        </div>
       </div>
     </header>
   );

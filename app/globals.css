@@ -3,14 +3,30 @@
 @tailwind utilities;
 
 :root { color-scheme: dark; }
-body { @apply min-h-screen bg-slate-950 text-white antialiased; }
+
+body {
+  @apply min-h-screen bg-[#04050a] text-white antialiased;
+  font-feature-settings: "ss01" on, "cv01" on;
+}
 
 .glass {
-  @apply rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl;
+  @apply rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-xl shadow-[0_20px_60px_-30px_rgba(45,92,255,0.45)];
+}
+
+.panel {
+  @apply rounded-2xl border border-white/10 bg-[#0a0d14]/90;
+}
+
+.btn-primary {
+  @apply rounded-xl bg-gradient-to-r from-violet-500 via-fuchsia-500 to-orange-400 px-4 py-2 font-semibold text-white shadow-lg shadow-fuchsia-500/20 hover:scale-[1.01];
+}
+
+.btn-secondary {
+  @apply rounded-xl border border-white/20 px-4 py-2 text-white hover:bg-white/10;
 }
 
 input, textarea, select {
-  @apply rounded-xl border border-white/15 bg-slate-900/70 px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-violet-400/70;
+  @apply rounded-xl border border-white/15 bg-[#090d18]/80 px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-violet-400/70;
 }
 
 button { @apply transition duration-200; }
