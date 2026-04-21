@@ -12,20 +12,26 @@ export default function SignupPage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
+  const [isError, setIsError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     setMessage('');
+    setIsError(false);
 
     if (password.length < 8 || !/\d/.test(password)) {
+      setIsError(true);
       setMessage('Password must be at least 8 characters and include one number.');
       return;
     }
     if (password !== confirmPassword) {
+      setIsError(true);
       setMessage('Passwords do not match.');
       return;
     }
 
+    setLoading(true);
     const { error } = await supabaseClient.auth.signUp({
       email,
       password,
@@ -34,9 +40,11 @@ export default function SignupPage() {
         data: { full_name: fullName }
       }
     });
+    setLoading(false);
 
     if (error) {
-      setMessage('Signup unavailable right now. Please try again.');
+      setIsError(true);
+      setMessage(error.message || 'Signup is temporarily unavailable. Please try again.');
       return;
     }
 
@@ -52,9 +60,9 @@ export default function SignupPage() {
         <input type="email" required placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full" />
         <input type="password" required placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full" />
         <input type="password" required placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="w-full" />
-        <button className="btn-primary w-full">Create Account</button>
+        <button disabled={loading} className="btn-primary w-full disabled:cursor-not-allowed disabled:opacity-60">{loading ? 'Creating Account...' : 'Create Account'}</button>
       </form>
-      {message && <p className="mt-3 text-sm text-slate-300">{message}</p>}
+      {message && <p className={`mt-3 rounded-lg px-3 py-2 text-sm ${isError ? 'border border-red-300/30 bg-red-400/10 text-red-200' : 'border border-emerald-300/30 bg-emerald-400/10 text-emerald-200'}`}>{message}</p>}
       <p className="mt-4 text-sm text-slate-400">
         Have an account? <Link className="text-violet-300" href="/login">Log In</Link>
       </p>
