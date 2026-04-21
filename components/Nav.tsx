@@ -31,18 +31,8 @@ export function Nav() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-black/60 backdrop-blur-2xl">
-      <div className="relative mx-auto flex max-w-[1240px] items-center justify-between gap-3 px-4 py-3 md:px-6">
+      <div className="mx-auto flex max-w-[1240px] items-center justify-between gap-3 px-4 py-3 md:px-6">
         <Link href="/" className="text-xl font-semibold tracking-tight">{APP_NAME}</Link>
-
-        {isLanding && (
-          <div className="pointer-events-none absolute left-1/2 hidden -translate-x-1/2 md:block">
-            <nav className="pointer-events-auto rounded-full border border-white/10 bg-white/[0.03] px-2 py-1">
-              {['Platform', 'Solutions', 'Safety', 'Resources'].map((item) => (
-                <button key={item} className="px-4 py-1 text-sm text-slate-300 transition hover:text-white">{item}</button>
-              ))}
-            </nav>
-          </div>
-        )}
 
         {!isLanding && !isAuthPage && (
           <nav className="hidden items-center gap-2 md:flex">
@@ -58,7 +48,7 @@ export function Nav() {
           <button onClick={() => setLang(lang === 'en' ? 'es' : 'en')} className="rounded-full border border-white/20 px-3 py-1.5 text-xs">{lang === 'en' ? 'EN / ES' : 'ES / EN'}</button>
           {isLanding ? (
             <>
-              <Link href="/login" className="hidden rounded-full px-3 py-1.5 text-sm text-slate-200 md:inline">{t('nav_login')}</Link>
+              <Link href="/login" className="rounded-full px-3 py-1.5 text-sm text-slate-200">{t('nav_login')}</Link>
               <Link href="/signup" className="rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-black">{t('nav_signup')}</Link>
             </>
           ) : !isAuthPage ? (

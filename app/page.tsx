@@ -12,6 +12,14 @@ export default function LandingPage() {
         <div className="pointer-events-none absolute -left-16 top-8 h-60 w-60 rounded-full border-[10px] border-fuchsia-400/60" />
         <div className="pointer-events-none absolute right-8 top-16 h-44 w-44 rounded-full border-[9px] border-blue-400/60" />
         <div className="pointer-events-none absolute -bottom-8 left-1/4 h-72 w-72 rounded-full border-[11px] border-orange-300/45" />
+        <div className="pointer-events-none absolute right-[-4rem] top-24 hidden w-[28rem] rotate-[-7deg] rounded-2xl border border-white/15 bg-white/5 p-4 opacity-55 blur-[1.6px] lg:block">
+          <div className="space-y-2 rounded-xl bg-black/60 p-4">
+            <p className="text-xs text-slate-300">Live Ops Panel</p>
+            <div className="h-3 w-2/3 rounded bg-white/20" />
+            <div className="h-3 w-1/2 rounded bg-white/20" />
+            <div className="h-20 rounded bg-violet-500/20" />
+          </div>
+        </div>
 
         <div className="relative z-10 mx-auto max-w-5xl text-center">
           <p className="mb-5 inline-flex rounded-full border border-white/20 bg-white/5 px-3 py-1 text-xs uppercase tracking-widest text-slate-300">AI Operating System for Bilingual Construction Teams</p>

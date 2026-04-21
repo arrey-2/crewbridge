@@ -38,6 +38,13 @@ export default function LogsPage() {
   const filtered = useMemo(() => rows.filter((r) => `${r.job_name} ${new Date(r.created_at).toLocaleDateString()}`.toLowerCase().includes(query.toLowerCase())), [rows, query]);
   const byJob = useMemo(() => filtered.reduce<Record<string, any[]>>((acc, row) => ((acc[row.job_name] = [...(acc[row.job_name] || []), row]), acc), {}), [filtered]);
 
+  function safetyWarningText(entry: any) {
+    const spanish = 'Advertencia de Seguridad: Verifique cumplimiento antes de continuar.';
+    const english = 'Safety Warning: Verify compliance before proceeding.';
+    const isSpanishContext = entry.target_language === 'Spanish' || entry.source_language === 'Spanish';
+    return isSpanishContext ? `${spanish} / ${english}` : english;
+  }
+
   async function exportJobPdf(jobName: string) {
     const entries = byJob[jobName] || [];
     const now = new Date();
@@ -45,6 +52,7 @@ export default function LogsPage() {
       <Document>
         <Page size="A4" style={styles.page}>
           <Text style={styles.brand}>CrewBridge • Bilingual Field Report</Text>
+          <Text style={styles.muted}>Communication, Safety, and Coordination Log</Text>
           <View style={styles.section}>
             <Text>Project: {jobName}</Text>
             <Text>Generated: {now.toLocaleDateString()} {now.toLocaleTimeString()}</Text>
@@ -56,11 +64,11 @@ export default function LogsPage() {
                 <Text>{new Date(e.created_at).toLocaleString()} • {e.sender_role}</Text>
                 <Text>Original: {e.original_text}</Text>
                 <Text>Translated: {e.translated_text}</Text>
-                {e.safety_flag ? <Text style={styles.hazard}>SAFETY FLAG: Verify controls before execution.</Text> : <Text style={styles.muted}>Safety flag: No</Text>}
+                {e.safety_flag ? <Text style={styles.hazard}>{safetyWarningText(e)}</Text> : <Text style={styles.muted}>Safety flag: No</Text>}
               </View>
             ))}
           </View>
-          <View style={styles.section}><Text>Notes:</Text><Text style={styles.muted}>______________________________________________________________</Text></View>
+          <View style={styles.section}><Text>Notes / Notas:</Text><Text style={styles.muted}>______________________________________________________________</Text><Text style={styles.muted}>______________________________________________________________</Text></View>
           <View style={styles.section}><Text>Foreman Signature: ____________________   Crew Lead Signature: ____________________</Text></View>
         </Page>
       </Document>
