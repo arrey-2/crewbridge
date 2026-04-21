@@ -4,11 +4,13 @@ import { FormEvent, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabaseClient } from '@/lib/supabase';
+import { useLanguage } from '@/components/LanguageProvider';
 
 export default function LoginClient() {
   const router = useRouter();
   const params = useSearchParams();
   const message = params.get('message');
+  const { t } = useLanguage();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -34,20 +36,21 @@ export default function LoginClient() {
   }
 
   return (
-    <div className="mx-auto max-w-md rounded-xl border border-slate-700 bg-panel p-6">
-      <h1 className="mb-2 text-2xl font-semibold">CrewBridge Login</h1>
-      {message && <p className="mb-3 text-amber-400">{message}</p>}
+    <div className="mx-auto max-w-md glass p-8">
+      <h1 className="mb-2 text-3xl font-semibold">{t('login_title')}</h1>
+      <p className="mb-6 text-slate-300">CrewBridge</p>
+      {message && <p className="mb-3 rounded-xl border border-amber-300/30 bg-amber-300/10 px-3 py-2 text-amber-200">{message}</p>}
       <form className="space-y-3" onSubmit={onSubmit}>
         <input type="email" required placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full" />
         <input type="password" required placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full" />
-        <button className="w-full rounded-md bg-amber-500 px-4 py-2 font-semibold text-black">Login</button>
+        <button className="w-full rounded-xl bg-gradient-to-r from-violet-500 to-blue-500 px-4 py-2.5 font-semibold text-white shadow-lg shadow-violet-500/20">{t('nav_login')}</button>
       </form>
-      {error && <p className="mt-2 text-red-400">{error}</p>}
-      <button onClick={demoMode} className="mt-4 w-full rounded-md border border-slate-600 px-4 py-2">
+      {error && <p className="mt-2 text-red-300">{error}</p>}
+      <button onClick={demoMode} className="mt-4 w-full rounded-xl border border-white/20 px-4 py-2.5 font-medium hover:bg-white/10">
         Demo Mode
       </button>
       <p className="mt-4 text-sm text-slate-400">
-        No account? <Link className="text-amber-400" href="/signup">Create one</Link>
+        No account? <Link className="text-violet-300" href="/signup">Create one</Link>
       </p>
     </div>
   );

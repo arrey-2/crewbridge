@@ -3,27 +3,24 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabaseClient } from '@/lib/supabase';
+import { useLanguage } from '@/components/LanguageProvider';
 
 export default function AccountPage() {
+  const { t } = useLanguage();
   const [data, setData] = useState({ email: '', trade: '', daily: 0, remaining: 20 });
   const router = useRouter();
 
   useEffect(() => {
     const isDemo = document.cookie.includes('cb-demo=1');
-    if (isDemo) {
-      setData({ email: 'demo@crewbridge.local', trade: 'Plumbing', daily: 3, remaining: 17 });
-      return;
-    }
-
+    if (isDemo) { setData({ email: 'demo@crewbridge.local', trade: 'Plumbing', daily: 3, remaining: 17 }); return; }
     (async () => {
       const { data: auth } = await supabaseClient.auth.getUser();
-      const user = auth.user;
-      if (!user) return;
+      if (!auth.user) return;
       const today = new Date().toISOString().slice(0, 10);
-      const { data: usage } = await supabaseClient.from('usage').select('translation_count').eq('user_id', user.id).eq('date', today).maybeSingle();
-      const { data: profile } = await supabaseClient.from('profiles').select('trade').eq('id', user.id).maybeSingle();
+      const { data: usage } = await supabaseClient.from('usage').select('translation_count').eq('user_id', auth.user.id).eq('date', today).maybeSingle();
+      const { data: profile } = await supabaseClient.from('profiles').select('trade').eq('id', auth.user.id).maybeSingle();
       const daily = usage?.translation_count ?? 0;
-      setData({ email: user.email ?? '', trade: profile?.trade ?? 'Not set', daily, remaining: Math.max(0, 20 - daily) });
+      setData({ email: auth.user.email ?? '', trade: profile?.trade ?? 'Not set', daily, remaining: Math.max(0, 20 - daily) });
     })();
   }, []);
 
@@ -35,13 +32,15 @@ export default function AccountPage() {
   }
 
   return (
-    <div className="max-w-xl space-y-3 rounded-lg border border-slate-700 bg-panel p-6">
-      <h1 className="text-2xl font-semibold">Account</h1>
-      <p><span className="text-slate-400">Email:</span> {data.email}</p>
-      <p><span className="text-slate-400">Selected trade:</span> {data.trade}</p>
-      <p><span className="text-slate-400">Daily usage:</span> {data.daily} / 20</p>
-      <p><span className="text-slate-400">Remaining today:</span> {data.remaining}</p>
-      <button onClick={logout} className="rounded-md bg-amber-500 px-4 py-2 font-semibold text-black">Logout</button>
+    <div className="mx-auto max-w-2xl glass p-6">
+      <h1 className="text-2xl font-semibold">{t('account_title')}</h1>
+      <div className="mt-4 grid gap-3 md:grid-cols-2">
+        <div className="rounded-xl border border-white/10 bg-slate-900/50 p-4"><p className="text-xs text-slate-400">Email</p><p>{data.email}</p></div>
+        <div className="rounded-xl border border-white/10 bg-slate-900/50 p-4"><p className="text-xs text-slate-400">Trade</p><p>{data.trade}</p></div>
+        <div className="rounded-xl border border-white/10 bg-slate-900/50 p-4"><p className="text-xs text-slate-400">Daily usage</p><p>{data.daily} / 20</p></div>
+        <div className="rounded-xl border border-white/10 bg-slate-900/50 p-4"><p className="text-xs text-slate-400">Remaining</p><p>{data.remaining}</p></div>
+      </div>
+      <button onClick={logout} className="mt-5 rounded-xl bg-gradient-to-r from-violet-500 to-blue-500 px-4 py-2 font-semibold">Logout</button>
     </div>
   );
 }

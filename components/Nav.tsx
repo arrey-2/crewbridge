@@ -2,51 +2,58 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { APP_NAME } from '@/lib/constants';
-import { cn } from '@/lib/utils';
 import { supabaseClient } from '@/lib/supabase';
+import { APP_NAME } from '@/lib/constants';
+import { useLanguage } from './LanguageProvider';
+import { cn } from '@/lib/utils';
 
-const links = [
-  { href: '/dashboard', label: 'Dashboard' },
-  { href: '/translate', label: 'New Translation' },
-  { href: '/logs', label: 'Job Logs' },
-  { href: '/about', label: 'About' },
-  { href: '/account', label: 'Account' }
+const protectedLinks = [
+  { href: '/dashboard', key: 'nav_dashboard' as const },
+  { href: '/translate', key: 'nav_translate' as const },
+  { href: '/logs', key: 'nav_logs' as const },
+  { href: '/account', key: 'nav_account' as const }
 ];
 
 export function Nav() {
   const pathname = usePathname();
   const router = useRouter();
-  const showNav = pathname !== '/login' && pathname !== '/signup' && pathname !== '/';
+  const { lang, setLang, t } = useLanguage();
 
-  if (!showNav) return null;
+  const isAuthPage = pathname === '/login' || pathname === '/signup';
+  const isLanding = pathname === '/';
 
   async function logout() {
     await supabaseClient.auth.signOut();
     document.cookie = 'cb-access-token=; Max-Age=0; path=/';
+    document.cookie = 'cb-demo=; Max-Age=0; path=/';
     router.push('/login');
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/90 backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3">
-        <Link href="/dashboard" className="font-semibold text-lg">{APP_NAME}</Link>
-        <nav className="flex flex-wrap items-center gap-2">
-          {links.map((link) => (
-            <Link
-              className={cn(
-                'rounded-md px-3 py-1 text-sm text-slate-300 hover:bg-slate-800',
-                pathname === link.href && 'bg-slate-800 text-white'
-              )}
-              key={link.href}
-              href={link.href}
-            >
-              {link.label}
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/70 backdrop-blur-xl">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
+        <Link href="/" className="text-lg font-semibold tracking-tight text-white">{APP_NAME}</Link>
+        <nav className="hidden items-center gap-2 md:flex">
+          {!isLanding && !isAuthPage && protectedLinks.map((link) => (
+            <Link key={link.href} href={link.href} className={cn('rounded-full px-3 py-1.5 text-sm text-slate-300 transition hover:bg-white/10 hover:text-white', pathname === link.href && 'bg-white/10 text-white')}>
+              {t(link.key)}
             </Link>
           ))}
-          <button onClick={logout} className="rounded-md border border-slate-700 px-3 py-1 text-sm hover:bg-slate-800">
-            Logout
+          <button
+            onClick={() => setLang(lang === 'en' ? 'es' : 'en')}
+            className="rounded-full border border-white/20 px-3 py-1.5 text-xs text-slate-200"
+          >
+            {lang === 'en' ? 'EN / ES' : 'ES / EN'}
           </button>
+          {isLanding && (
+            <>
+              <Link href="/login" className="rounded-full px-3 py-1.5 text-sm text-slate-200 hover:bg-white/10">{t('nav_login')}</Link>
+              <Link href="/signup" className="rounded-full bg-gradient-to-r from-violet-500 to-blue-500 px-4 py-1.5 text-sm font-semibold text-white shadow-lg shadow-violet-500/20">{t('nav_signup')}</Link>
+            </>
+          )}
+          {!isLanding && !isAuthPage && (
+            <button onClick={logout} className="rounded-full bg-gradient-to-r from-violet-500 to-blue-500 px-4 py-1.5 text-sm font-semibold text-white">Logout</button>
+          )}
         </nav>
       </div>
     </header>

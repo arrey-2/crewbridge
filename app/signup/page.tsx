@@ -3,8 +3,10 @@
 import { FormEvent, useState } from 'react';
 import Link from 'next/link';
 import { supabaseClient } from '@/lib/supabase';
+import { useLanguage } from '@/components/LanguageProvider';
 
 export default function SignupPage() {
+  const { t } = useLanguage();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [captchaToken, setCaptchaToken] = useState('');
@@ -22,10 +24,7 @@ export default function SignupPage() {
     const { error } = await supabaseClient.auth.signUp({
       email,
       password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/onboarding`,
-        captchaToken
-      }
+      options: { emailRedirectTo: `${window.location.origin}/onboarding`, captchaToken }
     });
 
     if (error) {
@@ -37,24 +36,17 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="mx-auto max-w-md rounded-xl border border-slate-700 bg-panel p-6">
-      <h1 className="mb-2 text-2xl font-semibold">Create CrewBridge Account</h1>
+    <div className="mx-auto max-w-md glass p-8">
+      <h1 className="mb-2 text-3xl font-semibold">{t('signup_title')}</h1>
       <form className="space-y-3" onSubmit={onSubmit}>
         <input type="email" required placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full" />
         <input type="password" required placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full" />
-        <input
-          type="text"
-          required
-          placeholder="CAPTCHA token"
-          value={captchaToken}
-          onChange={(e) => setCaptchaToken(e.target.value)}
-          className="w-full"
-        />
-        <button className="w-full rounded-md bg-amber-500 px-4 py-2 font-semibold text-black">Sign up</button>
+        <input type="text" required placeholder="CAPTCHA token" value={captchaToken} onChange={(e) => setCaptchaToken(e.target.value)} className="w-full" />
+        <button className="w-full rounded-xl bg-gradient-to-r from-violet-500 to-blue-500 px-4 py-2.5 font-semibold text-white">{t('nav_signup')}</button>
       </form>
       {message && <p className="mt-3 text-sm text-slate-300">{message}</p>}
       <p className="mt-4 text-sm text-slate-400">
-        Have an account? <Link className="text-amber-400" href="/login">Login</Link>
+        Have an account? <Link className="text-violet-300" href="/login">Login</Link>
       </p>
     </div>
   );
