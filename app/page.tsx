@@ -10,9 +10,10 @@ export default function LandingPage() {
     <div className="space-y-16">
       <section className="grid items-center gap-8 py-8 lg:grid-cols-2">
         <div>
-          <p className="mb-4 inline-flex rounded-full border border-violet-400/30 bg-violet-500/10 px-3 py-1 text-xs uppercase tracking-widest text-violet-200">Bilingual Jobsite Communication</p>
+          <p className="mb-4 inline-flex rounded-full border border-violet-400/30 bg-violet-500/10 px-3 py-1 text-xs uppercase tracking-widest text-violet-200">Translate. Coordinate. Document.</p>
           <h1 className="text-4xl font-semibold leading-tight md:text-6xl">{t('hero_title')}</h1>
           <p className="mt-5 max-w-xl text-lg text-slate-300">{t('hero_sub')}</p>
+          <ul className="mt-4 grid grid-cols-2 gap-2 text-sm text-slate-300"><li>• Reduce delays</li><li>• Prevent costly rework</li><li>• Improve safety clarity</li><li>• Keep audit-ready records</li></ul>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link href="/signup" className="rounded-full bg-gradient-to-r from-violet-500 to-blue-500 px-6 py-3 font-semibold">{t('cta_primary')}</Link>
             <Link href="/login" className="rounded-full border border-white/20 px-6 py-3 font-semibold">{t('cta_secondary')}</Link>

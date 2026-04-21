@@ -11,7 +11,8 @@ const protectedLinks = [
   { href: '/dashboard', key: 'nav_dashboard' as const },
   { href: '/translate', key: 'nav_translate' as const },
   { href: '/logs', key: 'nav_logs' as const },
-  { href: '/account', key: 'nav_account' as const }
+  { href: '/account', key: 'nav_account' as const },
+  { href: '/templates', key: 'nav_templates' as const }
 ];
 
 export function Nav() {

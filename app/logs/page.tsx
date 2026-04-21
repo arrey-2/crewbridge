@@ -7,7 +7,14 @@ import { DEMO_JOBS } from '@/lib/constants';
 import { EmptyState } from '@/components/EmptyState';
 import { useLanguage } from '@/components/LanguageProvider';
 
-const styles = StyleSheet.create({ page: { padding: 24, backgroundColor: '#fff', color: '#111827', fontSize: 10 }, title: { fontSize: 16, marginBottom: 8 }, row: { marginBottom: 6, paddingBottom: 6, borderBottom: '1 solid #d1d5db' }, hazard: { color: '#b45309' } });
+const styles = StyleSheet.create({
+  page: { padding: 28, backgroundColor: '#ffffff', color: '#111827', fontSize: 10 },
+  brand: { fontSize: 16, marginBottom: 10, fontWeight: 700 },
+  section: { marginBottom: 10 },
+  row: { marginBottom: 6, paddingBottom: 6, borderBottom: '1 solid #d1d5db' },
+  hazard: { color: '#b45309', fontWeight: 700 },
+  muted: { color: '#6b7280' }
+});
 
 export default function LogsPage() {
   const { t } = useLanguage();
@@ -16,7 +23,10 @@ export default function LogsPage() {
 
   useEffect(() => {
     const isDemo = document.cookie.includes('cb-demo=1');
-    if (isDemo) { setRows(DEMO_JOBS.flatMap((job) => job.entries.map((entry, index) => ({ id: `${job.id}-${index}`, job_name: job.name, created_at: new Date().toISOString(), ...entry })))); return; }
+    if (isDemo) {
+      setRows(DEMO_JOBS.flatMap((job) => job.entries.map((entry, index) => ({ id: `${job.id}-${index}`, job_name: job.name, created_at: new Date().toISOString(), ...entry }))));
+      return;
+    }
     (async () => {
       const { data: auth } = await supabaseClient.auth.getUser();
       if (!auth.user) return;
@@ -30,14 +40,46 @@ export default function LogsPage() {
 
   async function exportJobPdf(jobName: string) {
     const entries = byJob[jobName] || [];
-    const blob = await pdf(<Document><Page size="A4" style={styles.page}><Text style={styles.title}>CrewBridge | Job Log</Text><Text>Job: {jobName}</Text><View style={{ marginTop: 10 }}>{entries.map((e) => <View key={e.id} style={styles.row}><Text>{new Date(e.created_at).toLocaleString()} | {e.sender_role}</Text><Text>Original: {e.original_text}</Text><Text>Translated: {e.translated_text}</Text>{e.safety_flag ? <Text style={styles.hazard}>FLAGGED SAFETY CONTENT</Text> : null}</View>)}</View></Page></Document>).toBlob();
+    const now = new Date();
+    const blob = await pdf(
+      <Document>
+        <Page size="A4" style={styles.page}>
+          <Text style={styles.brand}>CrewBridge • Bilingual Field Report</Text>
+          <View style={styles.section}>
+            <Text>Project: {jobName}</Text>
+            <Text>Generated: {now.toLocaleDateString()} {now.toLocaleTimeString()}</Text>
+            <Text style={styles.muted}>Scope: Translation log with safety review</Text>
+          </View>
+          <View style={styles.section}>
+            {entries.map((e) => (
+              <View key={e.id} style={styles.row}>
+                <Text>{new Date(e.created_at).toLocaleString()} • {e.sender_role}</Text>
+                <Text>Original: {e.original_text}</Text>
+                <Text>Translated: {e.translated_text}</Text>
+                {e.safety_flag ? <Text style={styles.hazard}>SAFETY FLAG: Verify controls before execution.</Text> : <Text style={styles.muted}>Safety flag: No</Text>}
+              </View>
+            ))}
+          </View>
+          <View style={styles.section}><Text>Notes:</Text><Text style={styles.muted}>______________________________________________________________</Text></View>
+          <View style={styles.section}><Text>Foreman Signature: ____________________   Crew Lead Signature: ____________________</Text></View>
+        </Page>
+      </Document>
+    ).toBlob();
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href = url; a.download = `${jobName.replace(/\s+/g, '_')}_crewbridge_logs.pdf`; a.click(); URL.revokeObjectURL(url);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${jobName.replace(/\s+/g, '_')}_crewbridge_report.pdf`;
+    a.click();
+    URL.revokeObjectURL(url);
   }
 
   return (
     <div className="space-y-4">
-      <div className="glass p-5"><h1 className="text-2xl font-semibold">{t('logs_title')}</h1><input placeholder="Search by job name or date" value={query} onChange={(e) => setQuery(e.target.value)} className="mt-3 w-full md:w-96" /></div>
+      <div className="glass p-5">
+        <h1 className="text-2xl font-semibold">{t('logs_title')}</h1>
+        <p className="text-slate-400">Search activity and export enterprise-ready bilingual field reports.</p>
+        <input placeholder="Search by job name or date" value={query} onChange={(e) => setQuery(e.target.value)} className="mt-3 w-full md:w-96" />
+      </div>
       {Object.keys(byJob).length === 0 ? <EmptyState message="No translation logs yet. Create your first translation to build your job log." ctaHref="/translate" ctaLabel="Go to Translate" /> : Object.entries(byJob).map(([jobName, entries]) => (
         <section key={jobName} className="glass p-5">
           <div className="mb-3 flex items-center justify-between"><h2 className="text-xl font-semibold">{jobName}</h2><button onClick={() => exportJobPdf(jobName)} className="rounded-xl bg-gradient-to-r from-violet-500 to-blue-500 px-3 py-2 font-semibold">Export PDF</button></div>

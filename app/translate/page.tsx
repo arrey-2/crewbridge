@@ -23,6 +23,7 @@ export default function TranslatePage() {
   const [loading, setLoading] = useState(false);
   const [warning, setWarning] = useState('');
   const [remaining, setRemaining] = useState(20);
+  const [confirmation, setConfirmation] = useState('');
 
   const sourceLang = senderRole === 'Owner' ? 'English' : 'Spanish';
   const targetLang = senderRole === 'Owner' ? 'Spanish' : 'English';
@@ -87,7 +88,19 @@ export default function TranslatePage() {
           <div className="flex flex-wrap gap-2">{Object.entries(templates).map(([n, v]) => <button key={n} onClick={() => setInput(v)} className="rounded-xl border border-white/20 px-3 py-1 text-xs">{n}</button>)}</div>
           {loading && <div><p className="mb-1 text-sm">Translating</p><div className="h-2 rounded-full bg-slate-800"><div className="h-full w-full animate-pulse rounded-full bg-gradient-to-r from-violet-500 to-blue-500" /></div></div>}
           {warning && <div className="rounded-xl border border-amber-300/30 bg-amber-400/10 p-3 text-amber-200">{warning}</div>}
-        </div>
+          <div className="rounded-xl border border-white/10 bg-slate-900/60 p-3">
+            <p className="mb-2 text-sm font-medium text-slate-200">Task confirmation</p>
+            <div className="flex flex-wrap gap-2">
+              {['Understood', 'Need clarification', 'Safety issue'].map((item) => (
+                <button key={item} onClick={() => setConfirmation(item)} className={`rounded-xl px-3 py-1.5 text-xs ${confirmation === item ? 'bg-orange-500/80 text-white' : 'border border-white/20'}`}>{item}</button>
+              ))}
+            </div>
+            {confirmation && <p className="mt-2 text-xs text-slate-400">Status captured: {confirmation}</p>}
+          </div>
+          <div className="grid gap-2 sm:grid-cols-2">
+            <button onClick={() => setInput('Create a bilingual daily brief with tasks, crew assignments, materials, and safety reminders for today.')} className="rounded-xl border border-white/20 px-3 py-2 text-left text-sm hover:bg-white/5">Daily Brief Generator</button>
+            <button onClick={() => setInput('Create a bilingual toolbox talk for today with hazard controls, PPE requirements, and clear action steps.')} className="rounded-xl border border-white/20 px-3 py-2 text-left text-sm hover:bg-white/5">Toolbox Talk Generator</button>
+          </div>        </div>
         <div className="grid gap-3">
           <div className="rounded-xl border border-white/10 bg-slate-900/60 p-4"><h2 className="font-semibold">Original ({sourceLang})</h2><p className="mt-2 whitespace-pre-wrap text-slate-200">{input || 'Enter instruction to translate.'}</p></div>
           <div className="rounded-xl border border-white/10 bg-slate-900/60 p-4"><h2 className="font-semibold">Translated ({targetLang})</h2><p className="mt-2 whitespace-pre-wrap text-slate-200">{output || 'Translation will appear here.'}</p></div>
