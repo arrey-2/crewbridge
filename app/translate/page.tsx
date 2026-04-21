@@ -37,7 +37,7 @@ export default function TranslatePage() {
     if (document.cookie.includes('cb-demo=1')) {
       setTimeout(() => {
         setOutput(senderRole === 'Owner' ? 'Por favor revisen la zanja antes de instalar la tubería.' : 'Please check the trench before installing the pipe.');
-        if (/fall|electrical|hazard|warning|danger|trench/i.test(input)) setWarning('FLAG: This instruction may involve a safety hazard. Verify compliance before proceeding.');
+        if (/fall|electrical|hazard|warning|danger|trench/i.test(input)) setWarning(t('translate_warning'));
         setLoading(false);
       }, 700);
       return;
@@ -55,7 +55,7 @@ export default function TranslatePage() {
 
     setOutput(data.translated);
     setRemaining(data.usageRemaining ?? remaining);
-    if (data.safetyFlag) setWarning('FLAG: This instruction may involve a safety hazard. Verify compliance before proceeding.');
+    if (data.safetyFlag) setWarning(t('translate_warning'));
     setLoading(false);
   }
 
@@ -72,7 +72,7 @@ export default function TranslatePage() {
     <div className="space-y-5">
       <section className="panel p-5">
         <h1 className="text-2xl font-semibold">{t('translate_title')}</h1>
-        <p className="text-slate-300">Translations remaining today: {remaining}</p>
+        <p className="text-slate-300">{t('translate_remaining')}: {remaining}</p>
       </section>
 
       <section className="grid gap-5 lg:grid-cols-[1.1fr_1fr]">
@@ -92,8 +92,8 @@ export default function TranslatePage() {
           <div className="flex items-center justify-between text-xs text-slate-400"><span>{sourceLang} input</span><span>{charsRemaining} characters remaining</span></div>
 
           <div className="flex flex-wrap gap-2">
-            <button onClick={useVoice} className="btn-secondary">Voice Input</button>
-            <button onClick={onTranslate} className="btn-primary">Translate</button>
+            <button onClick={useVoice} className="btn-secondary">{t('translate_voice')}</button>
+            <button onClick={onTranslate} className="btn-primary">{t('translate_button')}</button>
             {Object.entries(templates).map(([n, v]) => <button key={n} onClick={() => setInput(v)} className="rounded-xl border border-white/20 px-3 py-2 text-xs hover:bg-white/5">{n}</button>)}
           </div>
 
@@ -112,16 +112,16 @@ export default function TranslatePage() {
 
         <div className="space-y-4">
           <div className="panel p-5">
-            <h2 className="text-sm uppercase tracking-wider text-slate-400">Original ({sourceLang})</h2>
+            <h2 className="text-sm uppercase tracking-wider text-slate-400">{t('translate_original')} ({sourceLang})</h2>
             <p className="mt-2 whitespace-pre-wrap text-slate-200">{input || 'Enter instruction to translate.'}</p>
           </div>
           <div className="panel p-5">
-            <h2 className="text-sm uppercase tracking-wider text-slate-400">Translated ({targetLang})</h2>
+            <h2 className="text-sm uppercase tracking-wider text-slate-400">{t('translate_translated')} ({targetLang})</h2>
             <p className="mt-2 whitespace-pre-wrap text-slate-200">{output || 'Translation will appear here.'}</p>
           </div>
           <div className="panel p-5 text-sm text-slate-300">
-            <p className="font-medium text-white">Workflow helpers</p>
-            <p className="mt-2">Use Daily Brief and Safety templates to generate bilingual field communication faster.</p>
+            <p className="font-medium text-white">{t('translate_workflow_helpers')}</p>
+            <p className="mt-2">{t('translate_helper_text')}</p>
           </div>
         </div>
       </section>

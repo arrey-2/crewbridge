@@ -56,15 +56,15 @@ export default function SignupPage() {
       <h1 className="mb-2 text-3xl font-semibold">{t('signup_title')}</h1>
       <p className="mb-6 text-slate-400">Create your secure CrewBridge workspace.</p>
       <form className="space-y-3" onSubmit={onSubmit}>
-        <input type="text" required placeholder="Full Name" value={fullName} onChange={(e) => setFullName(e.target.value)} className="w-full" />
-        <input type="email" required placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full" />
-        <input type="password" required placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full" />
-        <input type="password" required placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="w-full" />
-        <button disabled={loading} className="btn-primary w-full disabled:cursor-not-allowed disabled:opacity-60">{loading ? 'Creating Account...' : 'Create Account'}</button>
+        <input type="text" required placeholder={t('auth_full_name')} value={fullName} onChange={(e) => setFullName(e.target.value)} className="w-full" />
+        <input type="email" required placeholder={t('auth_email')} value={email} onChange={(e) => setEmail(e.target.value)} className="w-full" />
+        <input type="password" required placeholder={t('auth_password')} value={password} onChange={(e) => setPassword(e.target.value)} className="w-full" />
+        <input type="password" required placeholder={t('auth_confirm_password')} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="w-full" />
+        <button disabled={loading} className="btn-primary w-full disabled:cursor-not-allowed disabled:opacity-60">{loading ? t('auth_creating') : t('auth_create_account')}</button>
       </form>
       {message && <p className={`mt-3 rounded-lg px-3 py-2 text-sm ${isError ? 'border border-red-300/30 bg-red-400/10 text-red-200' : 'border border-emerald-300/30 bg-emerald-400/10 text-emerald-200'}`}>{message}</p>}
       <p className="mt-4 text-sm text-slate-400">
-        Have an account? <Link className="text-violet-300" href="/login">Log In</Link>
+        {t('auth_have_account')} <Link className="text-violet-300" href="/login">{t('nav_login')}</Link>
       </p>
     </div>
   );

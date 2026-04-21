@@ -41,8 +41,8 @@ export default function LoginClient() {
       <p className="mb-6 text-slate-300">CrewBridge</p>
       {message && <p className="mb-3 rounded-xl border border-amber-300/30 bg-amber-300/10 px-3 py-2 text-amber-200">{message}</p>}
       <form className="space-y-3" onSubmit={onSubmit}>
-        <input type="email" required placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full" />
-        <input type="password" required placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full" />
+        <input type="email" required placeholder={t('auth_email')} value={email} onChange={(e) => setEmail(e.target.value)} className="w-full" />
+        <input type="password" required placeholder={t('auth_password')} value={password} onChange={(e) => setPassword(e.target.value)} className="w-full" />
         <button className="w-full rounded-xl bg-gradient-to-r from-violet-500 to-blue-500 px-4 py-2.5 font-semibold text-white shadow-lg shadow-violet-500/20">{t('nav_login')}</button>
       </form>
       {error && <p className="mt-2 text-red-300">{error}</p>}
@@ -50,7 +50,7 @@ export default function LoginClient() {
         Demo Mode
       </button>
       <p className="mt-4 text-sm text-slate-400">
-        No account? <Link className="text-violet-300" href="/signup">Create one</Link>
+        {t('auth_no_account')} <Link className="text-violet-300" href="/signup">{t('auth_create_one')}</Link>
       </p>
     </div>
   );

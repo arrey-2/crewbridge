@@ -42,19 +42,21 @@ export default function DashboardPage() {
     })();
   }, []);
 
+  const metricCards = [
+    [t('dash_translations_today'), `${stats.daily}`],
+    [t('dash_active_jobs'), `${stats.activeJobs}`],
+    [t('dash_pending'), '4'],
+    [t('dash_alerts'), '2'],
+    [t('dash_remaining'), `${stats.remaining}`]
+  ];
+
   return (
     <div className="space-y-6">
       <section className="panel p-6">
-        <p className="text-sm text-slate-400">Good morning</p>
+        <p className="text-sm text-slate-400">{t('dashboard_good_morning')}</p>
         <h1 className="text-3xl font-semibold">{t('dashboard_title')} • {name}</h1>
         <div className="mt-6 grid gap-3 md:grid-cols-2 xl:grid-cols-5">
-          {[
-            ['Translations today', `${stats.daily}`],
-            ['Active jobs', `${stats.activeJobs}`],
-            ['Pending confirmations', '4'],
-            ['Safety alerts', '2'],
-            ['Remaining today', `${stats.remaining}`]
-          ].map(([label, value], idx) => (
+          {metricCards.map(([label, value], idx) => (
             <div key={label} className={`rounded-xl border p-4 ${idx === 0 ? 'border-violet-400/40 bg-violet-500/10' : 'border-white/10 bg-white/[0.02]'}`}>
               <p className="text-xs text-slate-400">{label}</p>
               <p className="mt-1 text-2xl font-semibold">{value}</p>
@@ -63,14 +65,14 @@ export default function DashboardPage() {
         </div>
         <div className="mt-5 flex flex-wrap gap-3">
           <Link href="/translate" className="btn-primary">{t('cta_primary')}</Link>
-          <Link href="/templates" className="btn-secondary">Open Templates</Link>
+          <Link href="/templates" className="btn-secondary">{t('dash_open_templates')}</Link>
           <Link href="/logs" className="btn-secondary">{t('nav_logs')}</Link>
         </div>
       </section>
 
       <div className="grid gap-5 lg:grid-cols-2">
         <section className="panel p-6">
-          <h2 className="mb-3 text-xl font-semibold">Recent activity</h2>
+          <h2 className="mb-3 text-xl font-semibold">{t('dash_recent_activity')}</h2>
           {recentJobs.length === 0 ? (
             <EmptyState message="No jobs yet. Start your first translation to create a project activity trail." ctaHref="/translate" ctaLabel="New Translation" />
           ) : (
@@ -86,7 +88,7 @@ export default function DashboardPage() {
         </section>
 
         <section className="panel p-6">
-          <h2 className="mb-3 text-xl font-semibold">Operations tools</h2>
+          <h2 className="mb-3 text-xl font-semibold">{t('dash_ops_tools')}</h2>
           <div className="space-y-3 text-sm">
             {[
               'Daily Brief Generator',
