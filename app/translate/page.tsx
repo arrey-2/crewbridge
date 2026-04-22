@@ -24,31 +24,29 @@ export default function TranslatePage() {
   const [warning, setWarning] = useState('');
   const [remaining, setRemaining] = useState(20);
   const [confirmation, setConfirmation] = useState('');
+  const [isDemo, setIsDemo] = useState(false);
 
   const sourceLang = senderRole === 'Owner' ? 'English' : 'Spanish';
   const targetLang = senderRole === 'Owner' ? 'Spanish' : 'English';
   const charsRemaining = useMemo(() => 500 - input.length, [input]);
 
-  useEffect(() => { if (document.cookie.includes('cb-demo=1')) { setRemaining(17); setTrade('Plumbing'); } }, []);
+  useEffect(() => {
+    if (document.cookie.includes('cb-demo=1')) {
+      setIsDemo(true);
+      setRemaining(10);
+      setTrade('Plumbing');
+    }
+  }, []);
 
   async function onTranslate() {
     setLoading(true);
     setWarning('');
-    if (document.cookie.includes('cb-demo=1')) {
-      setTimeout(() => {
-        setOutput(senderRole === 'Owner' ? 'Por favor revisen la zanja antes de instalar la tubería.' : 'Please check the trench before installing the pipe.');
-        if (/fall|electrical|hazard|warning|danger|trench/i.test(input)) setWarning(t('translate_warning'));
-        setLoading(false);
-      }, 700);
-      return;
-    }
-
     const response = await fetch('/api/translate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ input, senderRole, trade, jobName }) });
     const data = await response.json();
     if (!response.ok) {
-      if (response.status === 403) setWarning(getDailyResetText());
+      if (response.status === 403) setWarning(data.error || getDailyResetText());
       else if (response.status === 440) window.location.href = '/login?message=Session+expired.+Please+log+in+again';
-      else setWarning('Translation unavailable. Please try again.');
+      else setWarning(data.error || 'Translation unavailable. Please try again.');
       setLoading(false);
       return;
     }
@@ -73,6 +71,7 @@ export default function TranslatePage() {
       <section className="panel p-5">
         <h1 className="text-2xl font-semibold">{t('translate_title')}</h1>
         <p className="text-slate-300">{t('translate_remaining')}: {remaining}</p>
+        {isDemo && <p className="mt-2 inline-flex rounded-full border border-violet-300/30 bg-violet-400/10 px-3 py-1 text-xs text-violet-200">Demo Mode – Real Translation (Limited Access)</p>}
       </section>
 
       <section className="grid gap-5 lg:grid-cols-[1.1fr_1fr]">
