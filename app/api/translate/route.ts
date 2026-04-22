@@ -6,29 +6,76 @@ import { TRANSLATION_SYSTEM_PROMPT } from '@/lib/constants';
 
 const requestLog = new Map<string, number[]>();
 
-async function requestTranslation(input: string, trade: string, sourceLanguage: string, targetLanguage: string) {
-  const openAIResponse = await fetch('https://api.openai.com/v1/responses', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
-    },
-    body: JSON.stringify({
-      model: 'gpt-4.1-mini',
-      max_output_tokens: 300,
-      input: [
-        { role: 'system', content: TRANSLATION_SYSTEM_PROMPT },
-        {
-          role: 'user',
-          content: `Trade: ${trade}\nSource language: ${sourceLanguage}\nTarget language: ${targetLanguage}\nInstruction: Preserve tone, structure, urgency, and practical field wording.\nText to translate: ${input}`
-        }
-      ]
-    })
-  });
+function extractTranslation(payload: any): string | null {
+  if (typeof payload?.output_text === 'string' && payload.output_text.trim()) return payload.output_text.trim();
+  const pieces = payload?.output?.flatMap((item: any) => item?.content ?? []) ?? [];
+  const text = pieces
+    .map((c: any) => c?.text)
+    .filter(Boolean)
+    .join(' ')
+    .trim();
+  return text || null;
+}
 
-  if (!openAIResponse.ok) return null;
-  const payload = await openAIResponse.json();
-  return payload.output_text?.trim() || null;
+async function requestTranslation(input: string, trade: string, sourceLanguage: string, targetLanguage: string) {
+  const hasKey = Boolean(process.env.OPENAI_API_KEY);
+  if (!hasKey) {
+    console.error('[translate] OPENAI_API_KEY missing. Translation service not configured.');
+    return { ok: false as const, error: 'Translation service is not configured right now.' };
+  }
+
+  try {
+    const openAIResponse = await fetch('https://api.openai.com/v1/responses', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-4.1-mini',
+        max_output_tokens: 300,
+        input: [
+          { role: 'system', content: TRANSLATION_SYSTEM_PROMPT },
+          {
+            role: 'user',
+            content: `Trade: ${trade}\nSource language: ${sourceLanguage}\nTarget language: ${targetLanguage}\nInstruction: Preserve tone, structure, urgency, and practical field wording.\nText to translate: ${input}`
+          }
+        ]
+      })
+    });
+
+    const rawText = await openAIResponse.text();
+    if (!openAIResponse.ok) {
+      console.error('[translate] OpenAI request failed', {
+        status: openAIResponse.status,
+        body: rawText,
+        hasOpenAIKey: hasKey
+      });
+      return { ok: false as const, error: 'Translation unavailable. Please try again.' };
+    }
+
+    let payload: any;
+    try {
+      payload = JSON.parse(rawText);
+    } catch (parseErr) {
+      console.error('[translate] Unable to parse OpenAI response JSON', { rawText, parseErr });
+      return { ok: false as const, error: 'Translation unavailable. Please try again.' };
+    }
+
+    const translated = extractTranslation(payload);
+    if (!translated) {
+      console.error('[translate] OpenAI response contained no translatable text', { payload });
+      return { ok: false as const, error: 'Translation unavailable. Please try again.' };
+    }
+
+    return { ok: true as const, translated };
+  } catch (err) {
+    console.error('[translate] Unexpected translation error', {
+      err,
+      hasOpenAIKey: hasKey
+    });
+    return { ok: false as const, error: 'Translation unavailable. Please try again.' };
+  }
 }
 
 export async function POST(request: Request) {
@@ -48,7 +95,6 @@ export async function POST(request: Request) {
   const targetLanguage = senderRole === 'Owner' ? 'Spanish' : 'English';
   const safetyFlag = hasSafetyFlag(sourceLanguage === 'English' ? input : '');
 
-  // Demo mode: real translation, no DB writes
   if (isDemo) {
     const demoSessionId = cookieStore.get('cb-demo-session')?.value || crypto.randomUUID();
     const now = Date.now();
@@ -62,10 +108,10 @@ export async function POST(request: Request) {
     const demoCount = Number(cookieStore.get('cb-demo-count')?.value ?? '0');
     if (demoCount >= 10) return NextResponse.json({ error: 'Demo limit reached. Start a new demo session from login.' }, { status: 403 });
 
-    const translated = await requestTranslation(input, trade, sourceLanguage, targetLanguage);
-    if (!translated) return NextResponse.json({ error: 'Translation unavailable. Please try again.' }, { status: 500 });
+    const translationResult = await requestTranslation(input, trade, sourceLanguage, targetLanguage);
+    if (!translationResult.ok) return NextResponse.json({ error: translationResult.error }, { status: 500 });
 
-    const response = NextResponse.json({ translated, safetyFlag, usageRemaining: 10 - (demoCount + 1), demo: true });
+    const response = NextResponse.json({ translated: translationResult.translated, safetyFlag, usageRemaining: 10 - (demoCount + 1), demo: true });
     response.cookies.set('cb-demo-session', demoSessionId, { path: '/', maxAge: 60 * 60 * 8 });
     response.cookies.set('cb-demo-count', `${demoCount + 1}`, { path: '/', maxAge: 60 * 60 * 8 });
     return response;
@@ -94,8 +140,8 @@ export async function POST(request: Request) {
   const usage = usageRows?.[0];
   if ((usage?.translation_count ?? 0) >= 20) return NextResponse.json({ error: getDailyResetText() }, { status: 403 });
 
-  const translated = await requestTranslation(input, trade, sourceLanguage, targetLanguage);
-  if (!translated) return NextResponse.json({ error: 'Translation unavailable. Please try again.' }, { status: 500 });
+  const translationResult = await requestTranslation(input, trade, sourceLanguage, targetLanguage);
+  if (!translationResult.ok) return NextResponse.json({ error: translationResult.error }, { status: 500 });
 
   let jobId = body.jobId as string | undefined;
   if (!jobId) {
@@ -109,7 +155,7 @@ export async function POST(request: Request) {
     job_name: jobName,
     sender_role: senderRole,
     original_text: input,
-    translated_text: translated,
+    translated_text: translationResult.translated,
     source_language: sourceLanguage,
     target_language: targetLanguage,
     trade,
@@ -119,7 +165,7 @@ export async function POST(request: Request) {
   if (!usage) await admin.from('usage').insert({ user_id: user.id, date: today, translation_count: 1 });
   else await admin.from('usage').update({ translation_count: usage.translation_count + 1 }).eq('id', usage.id);
 
-  const response = NextResponse.json({ translated, safetyFlag, usageRemaining: 20 - ((usage?.translation_count ?? 0) + 1) });
+  const response = NextResponse.json({ translated: translationResult.translated, safetyFlag, usageRemaining: 20 - ((usage?.translation_count ?? 0) + 1) });
   response.cookies.set('cb-session-count', `${sessionCount + 1}`, { path: '/', maxAge: 60 * 60 * 8 });
   return response;
 }
