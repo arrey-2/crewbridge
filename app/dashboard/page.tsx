@@ -9,7 +9,7 @@ import { useLanguage } from '@/components/LanguageProvider';
 export default function DashboardPage() {
   const { t } = useLanguage();
   const [name, setName] = useState('CrewBridge User');
-  const [stats, setStats] = useState({ daily: 0, remaining: 20, activeJobs: 0 });
+  const [stats, setStats] = useState({ daily: 0, remaining: 20, activeJobs: 0, reports: 0 });
   const [recentJobs, setRecentJobs] = useState<Array<{ id: string; name: string }>>([]);
 
   useEffect(() => {
@@ -17,7 +17,7 @@ export default function DashboardPage() {
     if (isDemo) {
       setName('Demo Foreman');
       setRecentJobs([{ id: '1', name: 'Riverfront Apartments - Plumbing Rough-In' }, { id: '2', name: 'Westgate School - Electrical Panel Upgrade' }]);
-      setStats({ daily: 3, remaining: 17, activeJobs: 2 });
+      setStats({ daily: 3, remaining: 17, activeJobs: 2, reports: 2 });
       return;
     }
 
@@ -38,7 +38,7 @@ export default function DashboardPage() {
       const daily = usage?.translation_count ?? 0;
       const { data: jobs } = await supabaseClient.from('jobs').select('id,name').eq('user_id', user.id).order('created_at', { ascending: false }).limit(6);
       setRecentJobs(jobs ?? []);
-      setStats({ daily, remaining: Math.max(0, 20 - daily), activeJobs: jobs?.length ?? 0 });
+      setStats({ daily, remaining: Math.max(0, 20 - daily), activeJobs: jobs?.length ?? 0, reports: Math.min(5, daily) });
     })();
   }, []);
 
@@ -47,7 +47,8 @@ export default function DashboardPage() {
     [t('dash_active_jobs'), `${stats.activeJobs}`],
     [t('dash_pending'), '4'],
     [t('dash_alerts'), '2'],
-    [t('dash_remaining'), `${stats.remaining}`]
+    [t('dash_remaining'), `${stats.remaining}`],
+    ['Reports generated', `${stats.reports}`]
   ];
 
   return (
@@ -55,7 +56,7 @@ export default function DashboardPage() {
       <section className="panel p-6">
         <p className="text-sm text-slate-400">{t('dashboard_good_morning')}</p>
         <h1 className="text-3xl font-semibold">{t('dashboard_title')} • {name}</h1>
-        <div className="mt-6 grid gap-3 md:grid-cols-2 xl:grid-cols-5">
+        <div className="mt-6 grid gap-3 md:grid-cols-2 xl:grid-cols-6">
           {metricCards.map(([label, value], idx) => (
             <div key={label} className={`rounded-xl border p-4 ${idx === 0 ? 'border-violet-400/40 bg-violet-500/10' : 'border-white/10 bg-white/[0.02]'}`}>
               <p className="text-xs text-slate-400">{label}</p>
@@ -90,6 +91,7 @@ export default function DashboardPage() {
         <section className="panel p-6">
           <h2 className="mb-3 text-xl font-semibold">{t('dash_ops_tools')}</h2>
           <div className="space-y-3 text-sm">
+            <div className="rounded-xl border border-violet-400/30 bg-violet-500/10 p-3">Quick Action: Start Daily Brief</div>
             {[
               'Daily Brief Generator',
               'Toolbox Safety Briefs',

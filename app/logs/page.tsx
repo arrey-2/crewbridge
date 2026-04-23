@@ -8,7 +8,7 @@ import { EmptyState } from '@/components/EmptyState';
 import { useLanguage } from '@/components/LanguageProvider';
 
 const styles = StyleSheet.create({
-  page: { padding: 28, backgroundColor: '#ffffff', color: '#111827', fontSize: 10 },
+  page: { padding: 30, backgroundColor: '#ffffff', color: '#111827', fontSize: 10.5, lineHeight: 1.4 },
   brand: { fontSize: 16, marginBottom: 10, fontWeight: 700 },
   section: { marginBottom: 10 },
   row: { marginBottom: 6, paddingBottom: 6, borderBottom: '1 solid #d1d5db' },
@@ -52,7 +52,7 @@ export default function LogsPage() {
       <Document>
         <Page size="A4" style={styles.page}>
           <Text style={styles.brand}>CrewBridge • Bilingual Field Report</Text>
-          <Text style={styles.muted}>Communication, Safety, and Coordination Log</Text>
+          <Text style={styles.muted}>Communication, Safety, and Coordination Log / Registro de comunicación y seguridad</Text>
           <View style={styles.section}>
             <Text>Project: {jobName}</Text>
             <Text>Generated: {now.toLocaleDateString()} {now.toLocaleTimeString()}</Text>
@@ -62,8 +62,8 @@ export default function LogsPage() {
             {entries.map((e) => (
               <View key={e.id} style={styles.row}>
                 <Text>{new Date(e.created_at).toLocaleString()} • {e.sender_role}</Text>
-                <Text>Original: {e.original_text}</Text>
-                <Text>Translated: {e.translated_text}</Text>
+                <Text>Original / Original: {e.original_text}</Text>
+                <Text>Translated / Traducido: {e.translated_text}</Text>
                 {e.safety_flag ? <Text style={styles.hazard}>{safetyWarningText(e)}</Text> : <Text style={styles.muted}>Safety flag: No</Text>}
               </View>
             ))}

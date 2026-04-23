@@ -35,6 +35,20 @@ export default function LandingPage() {
         </div>
       </section>
 
+      <section className="grid gap-4 md:grid-cols-4">
+        {[
+          ['Delays', 'Language confusion stalls crews and throws off schedules.'],
+          ['Rework', 'Misunderstood instructions create expensive do-overs.'],
+          ['Safety Risk', 'Critical warnings can be missed in the field.'],
+          ['Documentation Gaps', 'Verbal-only communication leaves no paper trail.']
+        ].map(([title, body]) => (
+          <article key={title} className="panel p-5">
+            <h3 className="text-lg font-semibold">{title}</h3>
+            <p className="mt-2 text-sm text-slate-300">{body}</p>
+          </article>
+        ))}
+      </section>
+
       <section className="grid gap-4 md:grid-cols-3">
         {[
           [t('home_translate_title'), t('home_translate_desc')],
