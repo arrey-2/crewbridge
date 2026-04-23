@@ -2,11 +2,11 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { supabaseClient } from '@/lib/supabase';
 import { APP_NAME } from '@/lib/constants';
 import { useLanguage } from './LanguageProvider';
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
 
 const protectedLinks = [
   { href: '/dashboard', key: 'nav_dashboard' as const },
@@ -21,6 +21,10 @@ export function Nav() {
   const router = useRouter();
   const { lang, setLang, t } = useLanguage();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
   const isAuthPage = pathname === '/login' || pathname === '/signup';
   const isLanding = pathname === '/';
 
@@ -34,7 +38,7 @@ export function Nav() {
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-black/60 backdrop-blur-2xl">
       <div className="mx-auto flex max-w-[1240px] items-center justify-between gap-3 px-4 py-3 md:px-6">
-        <Link href="/" className="text-xl font-semibold tracking-tight">{APP_NAME}</Link>
+        <Link href="/" className="text-lg font-semibold tracking-tight sm:text-xl">{APP_NAME}</Link>
 
         {!isLanding && !isAuthPage && (
           <nav className="hidden items-center gap-2 md:flex">
@@ -49,7 +53,7 @@ export function Nav() {
         <div className="flex items-center gap-2">
           <button onClick={() => setLang(lang === 'en' ? 'es' : 'en')} className="rounded-full border border-white/20 px-3 py-1.5 text-xs">{lang === 'en' ? 'EN / ES' : 'ES / EN'}</button>
           {!isLanding && !isAuthPage && (
-            <button onClick={() => setMobileOpen((v) => !v)} className="rounded-full border border-white/20 px-3 py-1.5 text-xs md:hidden">Menu</button>
+            <button onClick={() => setMobileOpen((v) => !v)} className="rounded-full border border-white/20 px-3 py-1.5 text-xs md:hidden">{mobileOpen ? 'Close' : 'Menu'}</button>
           )}
           {isLanding ? (
             <>
@@ -63,7 +67,7 @@ export function Nav() {
       </div>
 
       {!isLanding && !isAuthPage && mobileOpen && (
-        <div className="border-t border-white/10 bg-black/90 p-3 md:hidden">
+        <div className="border-t border-white/10 bg-black/95 p-3 pb-4 md:hidden">
           <div className="grid gap-2">
             {protectedLinks.map((link) => (
               <Link key={link.href} href={link.href} onClick={() => setMobileOpen(false)} className={cn('rounded-lg px-3 py-2 text-sm text-slate-300', pathname === link.href && 'bg-white/10 text-white')}>
