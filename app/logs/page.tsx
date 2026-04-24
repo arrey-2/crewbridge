@@ -10,8 +10,8 @@ import { useLanguage } from '@/components/LanguageProvider';
 const styles = StyleSheet.create({
   page: { paddingTop: 34, paddingHorizontal: 34, paddingBottom: 30, backgroundColor: '#ffffff', color: '#0f172a', fontSize: 9.7, lineHeight: 1.4 },
   header: { marginBottom: 14 },
-  brand: { fontSize: 21, fontWeight: 800, letterSpacing: 0.1, marginBottom: 7 },
-  subtitle: { color: '#64748b', fontSize: 9.5, lineHeight: 1.35, marginBottom: 12 },
+  brand: { fontSize: 21, fontWeight: 800, letterSpacing: 0.1, marginBottom: 10 },
+  subtitle: { color: '#64748b', fontSize: 9.5, lineHeight: 1.35, marginTop: 2, marginBottom: 12 },
   divider: { borderBottom: '1 solid #dbe4ef', marginBottom: 14 },
   metaSection: { marginBottom: 12 },
   metaLine: { marginBottom: 4, fontSize: 10.2 },
