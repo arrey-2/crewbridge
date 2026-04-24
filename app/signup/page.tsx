@@ -22,12 +22,12 @@ export default function SignupPage() {
 
     if (password.length < 8 || !/\d/.test(password)) {
       setIsError(true);
-      setMessage('Password must be at least 8 characters and include one number.');
+      setMessage(t('signup_password_rule'));
       return;
     }
     if (password !== confirmPassword) {
       setIsError(true);
-      setMessage('Passwords do not match.');
+      setMessage(t('signup_password_mismatch'));
       return;
     }
 
@@ -44,17 +44,17 @@ export default function SignupPage() {
 
     if (error) {
       setIsError(true);
-      setMessage(error.message || 'Signup is temporarily unavailable. Please try again.');
+      setMessage(error.message || t('signup_temporarily_unavailable'));
       return;
     }
 
-    setMessage('Check your email to verify your account before logging in.');
+    setMessage(t('signup_check_email'));
   }
 
   return (
     <div className="mx-auto max-w-md panel p-8">
       <h1 className="mb-2 text-3xl font-semibold">{t('signup_title')}</h1>
-      <p className="mb-6 text-slate-400">Create your secure CrewBridge workspace.</p>
+      <p className="mb-6 text-slate-400">{t('signup_secure_workspace')}</p>
       <form className="space-y-3" onSubmit={onSubmit}>
         <input type="text" required placeholder={t('auth_full_name')} value={fullName} onChange={(e) => setFullName(e.target.value)} className="w-full" />
         <input type="email" required placeholder={t('auth_email')} value={email} onChange={(e) => setEmail(e.target.value)} className="w-full" />

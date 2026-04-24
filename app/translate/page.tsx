@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
 import { TRADES } from '@/lib/constants';
 import { getDailyResetText } from '@/lib/utils';
 import { useLanguage } from '@/components/LanguageProvider';
@@ -32,6 +33,11 @@ export default function TranslatePage() {
   const sourceLang = senderRole === 'Owner' ? 'English' : 'Spanish';
   const targetLang = senderRole === 'Owner' ? 'Spanish' : 'English';
   const charsRemaining = useMemo(() => 500 - input.length, [input]);
+  const workflowStatus = {
+    instruction: input.trim().length > 0,
+    translated: output.trim().length > 0,
+    confirmed: confirmation.trim().length > 0
+  };
 
   useEffect(() => {
     if (document.cookie.includes('cb-demo=1')) {
@@ -140,6 +146,24 @@ export default function TranslatePage() {
           <div className="panel p-5 text-sm text-slate-300">
             <p className="font-medium text-white">{t('translate_workflow_helpers')}</p>
             <p className="mt-2">{t('translate_helper_text')}</p>
+          </div>
+          <div className="panel p-5">
+            <p className="text-sm font-semibold text-white">{t('translate_workflow_title')}</p>
+            <div className="mt-3 space-y-2 text-sm">
+              {[
+                { label: t('translate_workflow_step_1'), done: workflowStatus.instruction },
+                { label: t('translate_workflow_step_2'), done: workflowStatus.translated },
+                { label: t('translate_workflow_step_3'), done: workflowStatus.confirmed },
+                { label: t('translate_workflow_step_4'), done: workflowStatus.translated && workflowStatus.confirmed }
+              ].map(({ label, done }) => (
+                <p key={label} className={`rounded-lg border px-3 py-2 ${done ? 'border-emerald-300/30 bg-emerald-400/10 text-emerald-200' : 'border-white/10 bg-white/[0.02] text-slate-300'}`}>
+                  {done ? '✓' : '•'} {label}
+                </p>
+              ))}
+            </div>
+            <Link href="/logs" className={`mt-3 inline-flex rounded-xl px-4 py-2 text-sm font-semibold ${workflowStatus.translated && workflowStatus.confirmed ? 'bg-gradient-to-r from-violet-500 to-blue-500 text-white' : 'pointer-events-none border border-white/15 text-slate-500'}`}>
+              {t('translate_generate_report')}
+            </Link>
           </div>
         </div>
       </section>

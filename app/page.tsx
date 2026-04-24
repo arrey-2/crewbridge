@@ -57,6 +57,7 @@ export default function LandingPage() {
           </h1>
           <p className="mx-auto mt-6 max-w-3xl text-lg text-slate-300">{t('hero_sub')}</p>
           <p className="mx-auto mt-3 max-w-2xl text-sm text-slate-400">{t('home_supporting_copy')}</p>
+          <p className="mx-auto mt-2 max-w-2xl text-sm font-medium text-amber-200/90">{t('home_urgency_line')}</p>
           <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
             <Link href="/signup" className="btn-primary">{t('cta_primary')}</Link>
             <Link href="/login" className="btn-secondary">{t('cta_secondary')}</Link>

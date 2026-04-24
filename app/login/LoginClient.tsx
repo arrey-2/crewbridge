@@ -22,7 +22,7 @@ export default function LoginClient() {
     setLoading(true);
     const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
     if (error || !data.session) {
-      setError('Unable to log in. Please check your credentials.');
+      setError(t('login_error_invalid'));
       setLoading(false);
       return;
     }
@@ -50,7 +50,7 @@ export default function LoginClient() {
       </form>
       {error && <p className="mt-2 text-red-300">{error}</p>}
       <button onClick={demoMode} disabled={loading} className="mt-4 w-full rounded-xl border border-white/20 px-4 py-2.5 font-medium hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-60">
-        Demo Mode
+        {t('login_demo_mode')}
       </button>
       <p className="mt-4 text-sm text-slate-400">
         {t('auth_no_account')} <Link className="text-violet-300" href="/signup">{t('auth_create_one')}</Link>

@@ -104,6 +104,7 @@ const dictionary: Dict = {
   home_value_chip_2: { en: 'Reduce rework and missed instructions', es: 'Reduce retrabajo e instrucciones perdidas' },
   home_value_chip_3: { en: 'Improve safety communication quality', es: 'Mejora la calidad de comunicación de seguridad' },
   home_value_chip_4: { en: 'Create daily documentation trails', es: 'Crea evidencia diaria de comunicación' },
+  home_urgency_line: { en: 'Every unclear instruction can cost hours in rework the same day.', es: 'Cada instrucción poco clara puede costar horas de retrabajo el mismo día.' },
 
   login_title: { en: 'Welcome back', es: 'Bienvenido de nuevo' },
   signup_title: { en: 'Create your CrewBridge account', es: 'Crea tu cuenta de CrewBridge' },
@@ -132,6 +133,20 @@ const dictionary: Dict = {
   translate_template_safety: { en: 'Safety Warning', es: 'Alerta de seguridad' },
   translate_template_task: { en: 'Task Assignment', es: 'Asignación de tarea' },
   translate_demo_badge: { en: 'Demo Mode – Real Translation (Limited Access)', es: 'Modo demo – Traducción real (acceso limitado)' }
+  ,
+  translate_workflow_title: { en: 'Live workflow status', es: 'Estado del flujo en vivo' },
+  translate_workflow_step_1: { en: 'Instruction captured', es: 'Instrucción capturada' },
+  translate_workflow_step_2: { en: 'Bilingual translation completed', es: 'Traducción bilingüe completada' },
+  translate_workflow_step_3: { en: 'Crew confirmation recorded', es: 'Confirmación de cuadrilla registrada' },
+  translate_workflow_step_4: { en: 'Report ready for export', es: 'Reporte listo para exportar' },
+  translate_generate_report: { en: 'Open Logs & Export Report', es: 'Abrir bitácoras y exportar reporte' },
+  login_error_invalid: { en: 'Unable to log in. Please check your credentials.', es: 'No se pudo iniciar sesión. Revisa tus datos.' },
+  login_demo_mode: { en: 'Demo Mode', es: 'Modo demo' },
+  signup_secure_workspace: { en: 'Create your secure CrewBridge workspace.', es: 'Crea tu espacio seguro de CrewBridge.' },
+  signup_password_rule: { en: 'Password must be at least 8 characters and include one number.', es: 'La contraseña debe tener al menos 8 caracteres e incluir un número.' },
+  signup_password_mismatch: { en: 'Passwords do not match.', es: 'Las contraseñas no coinciden.' },
+  signup_temporarily_unavailable: { en: 'Signup is temporarily unavailable. Please try again.', es: 'El registro no está disponible temporalmente. Inténtalo de nuevo.' },
+  signup_check_email: { en: 'Check your email to verify your account before logging in.', es: 'Revisa tu correo para verificar tu cuenta antes de iniciar sesión.' }
 };
 
 type Ctx = {
