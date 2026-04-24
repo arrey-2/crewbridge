@@ -14,13 +14,16 @@ export default function LoginClient() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     setError('');
+    setLoading(true);
     const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
     if (error || !data.session) {
       setError('Unable to log in. Please check your credentials.');
+      setLoading(false);
       return;
     }
 
@@ -43,10 +46,10 @@ export default function LoginClient() {
       <form className="space-y-3" onSubmit={onSubmit}>
         <input type="email" required placeholder={t('auth_email')} value={email} onChange={(e) => setEmail(e.target.value)} className="w-full" />
         <input type="password" required placeholder={t('auth_password')} value={password} onChange={(e) => setPassword(e.target.value)} className="w-full" />
-        <button className="w-full rounded-xl bg-gradient-to-r from-violet-500 to-blue-500 px-4 py-2.5 font-semibold text-white shadow-lg shadow-violet-500/20">{t('nav_login')}</button>
+        <button disabled={loading} className="w-full rounded-xl bg-gradient-to-r from-violet-500 to-blue-500 px-4 py-2.5 font-semibold text-white shadow-lg shadow-violet-500/20 disabled:cursor-not-allowed disabled:opacity-60">{loading ? `${t('nav_login')}...` : t('nav_login')}</button>
       </form>
       {error && <p className="mt-2 text-red-300">{error}</p>}
-      <button onClick={demoMode} className="mt-4 w-full rounded-xl border border-white/20 px-4 py-2.5 font-medium hover:bg-white/10">
+      <button onClick={demoMode} disabled={loading} className="mt-4 w-full rounded-xl border border-white/20 px-4 py-2.5 font-medium hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-60">
         Demo Mode
       </button>
       <p className="mt-4 text-sm text-slate-400">

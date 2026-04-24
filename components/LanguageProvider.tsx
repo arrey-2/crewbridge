@@ -14,6 +14,7 @@ const dictionary: Dict = {
   nav_templates: { en: 'Templates', es: 'Plantillas' },
   nav_login: { en: 'Log In', es: 'Entrar' },
   nav_signup: { en: 'Get Started', es: 'Empezar' },
+  nav_logout: { en: 'Logout', es: 'Salir' },
 
 
   auth_email: { en: 'Email', es: 'Correo' },
@@ -99,6 +100,10 @@ const dictionary: Dict = {
   home_module_templates_title: { en: 'Templates', es: 'Plantillas' },
   home_module_templates_desc: { en: 'Standardize repeat workflows across trades so every superintendent starts from proven language.', es: 'Estandariza flujos repetitivos por oficio para que cada residente arranque con lenguaje probado.' },
   home_roi_snapshot: { en: 'ROI snapshot: one avoided rework day can cover a month of CrewBridge.', es: 'Vista rápida de ROI: evitar un día de retrabajo puede pagar un mes de CrewBridge.' },
+  home_value_chip_1: { en: 'Save supervisor time every shift', es: 'Ahorra tiempo del supervisor en cada turno' },
+  home_value_chip_2: { en: 'Reduce rework and missed instructions', es: 'Reduce retrabajo e instrucciones perdidas' },
+  home_value_chip_3: { en: 'Improve safety communication quality', es: 'Mejora la calidad de comunicación de seguridad' },
+  home_value_chip_4: { en: 'Create daily documentation trails', es: 'Crea evidencia diaria de comunicación' },
 
   login_title: { en: 'Welcome back', es: 'Bienvenido de nuevo' },
   signup_title: { en: 'Create your CrewBridge account', es: 'Crea tu cuenta de CrewBridge' },
@@ -107,7 +112,26 @@ const dictionary: Dict = {
   translate_title: { en: 'Two-way jobsite translation', es: 'Traducción bidireccional de obra' },
   logs_title: { en: 'Job communication logs', es: 'Bitácoras de comunicación' },
   account_title: { en: 'Account & usage', es: 'Cuenta y uso' },
-  footer_tag: { en: 'Bridge the language gap on your job site.', es: 'Cierra la brecha de idioma en tu obra.' }
+  footer_tag: { en: 'Bridge the language gap on your job site.', es: 'Cierra la brecha de idioma en tu obra.' },
+
+  translate_role_owner: { en: 'Supervisor', es: 'Supervisor' },
+  translate_role_worker: { en: 'Crew Lead', es: 'Líder de cuadrilla' },
+  translate_project_name: { en: 'Project name', es: 'Nombre del proyecto' },
+  translate_instruction_placeholder: { en: 'Enter field instruction', es: 'Escribe la instrucción de campo' },
+  translate_input_label: { en: 'Input', es: 'Entrada' },
+  translate_characters_remaining: { en: 'characters remaining', es: 'caracteres disponibles' },
+  translate_error_generic: { en: 'Translation unavailable. Please try again.', es: 'La traducción no está disponible. Inténtalo de nuevo.' },
+  translate_loading: { en: 'Translating for field delivery…', es: 'Traduciendo para entrega en campo…' },
+  translate_confirmation_title: { en: 'Crew confirmation', es: 'Confirmación de cuadrilla' },
+  translate_confirmation_ok: { en: 'Understood', es: 'Entendido' },
+  translate_confirmation_clarify: { en: 'Need clarification', es: 'Necesito aclaración' },
+  translate_confirmation_safety: { en: 'Safety issue', es: 'Tema de seguridad' },
+  translate_empty_original: { en: 'Enter an instruction to translate.', es: 'Escribe una instrucción para traducir.' },
+  translate_empty_result: { en: 'Your translation will appear here.', es: 'Aquí aparecerá la traducción.' },
+  translate_template_daily: { en: 'Daily Brief', es: 'Brief diario' },
+  translate_template_safety: { en: 'Safety Warning', es: 'Alerta de seguridad' },
+  translate_template_task: { en: 'Task Assignment', es: 'Asignación de tarea' },
+  translate_demo_badge: { en: 'Demo Mode – Real Translation (Limited Access)', es: 'Modo demo – Traducción real (acceso limitado)' }
 };
 
 type Ctx = {

@@ -61,7 +61,7 @@ export function Nav() {
               <Link href="/signup" className="rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-black">{t('nav_signup')}</Link>
             </>
           ) : !isAuthPage ? (
-            <button onClick={logout} className="rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-black">Logout</button>
+            <button onClick={logout} className="rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-black">{t('nav_logout')}</button>
           ) : null}
         </div>
       </div>

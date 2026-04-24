@@ -53,13 +53,18 @@ export default function LandingPage() {
           <h1 className="text-4xl font-semibold leading-[1.05] md:text-6xl">
             <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-orange-300 bg-clip-text text-transparent">CrewBridge</span>
             <br />
-            <span className="text-balance">{lang === 'en' ? 'The bilingual operations platform for construction teams.' : 'La plataforma operativa bilingüe para equipos de construcción.'}</span>
+            <span className="text-balance">{lang === 'en' ? 'AI operations software for bilingual construction teams.' : 'Software operativo con IA para equipos bilingües de construcción.'}</span>
           </h1>
           <p className="mx-auto mt-6 max-w-3xl text-lg text-slate-300">{t('hero_sub')}</p>
           <p className="mx-auto mt-3 max-w-2xl text-sm text-slate-400">{t('home_supporting_copy')}</p>
           <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
             <Link href="/signup" className="btn-primary">{t('cta_primary')}</Link>
             <Link href="/login" className="btn-secondary">{t('cta_secondary')}</Link>
+          </div>
+          <div className="mt-6 grid gap-2 text-left text-xs text-slate-300 sm:grid-cols-2">
+            {[t('home_value_chip_1'), t('home_value_chip_2'), t('home_value_chip_3'), t('home_value_chip_4')].map((item) => (
+              <p key={item} className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2">✓ {item}</p>
+            ))}
           </div>
         </div>
       </section>
