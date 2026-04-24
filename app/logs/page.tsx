@@ -8,20 +8,27 @@ import { EmptyState } from '@/components/EmptyState';
 import { useLanguage } from '@/components/LanguageProvider';
 
 const styles = StyleSheet.create({
-  page: { padding: 28, backgroundColor: '#ffffff', color: '#0f172a', fontSize: 10, lineHeight: 1.45 },
-  header: { borderBottom: '1 solid #cbd5e1', paddingBottom: 10, marginBottom: 10 },
-  brand: { fontSize: 17, fontWeight: 700 },
-  subtitle: { color: '#475569', marginTop: 2 },
+  page: { paddingTop: 34, paddingHorizontal: 34, paddingBottom: 30, backgroundColor: '#ffffff', color: '#0f172a', fontSize: 9.7, lineHeight: 1.4 },
+  header: { marginBottom: 14 },
+  brand: { fontSize: 21, fontWeight: 800, letterSpacing: 0.1, marginBottom: 7 },
+  subtitle: { color: '#64748b', fontSize: 9.5, lineHeight: 1.35, marginBottom: 12 },
+  divider: { borderBottom: '1 solid #dbe4ef', marginBottom: 14 },
+  metaSection: { marginBottom: 12 },
+  metaLine: { marginBottom: 4, fontSize: 10.2 },
   section: { marginBottom: 10 },
-  summaryGrid: { flexDirection: 'row', gap: 10, marginTop: 8 },
-  summaryCard: { border: '1 solid #e2e8f0', padding: 6, borderRadius: 4, flexGrow: 1 },
-  row: { marginBottom: 8, padding: 8, border: '1 solid #e2e8f0', borderRadius: 4 },
-  rowMeta: { color: '#475569', marginBottom: 3 },
+  summaryGrid: { flexDirection: 'row', gap: 8, marginTop: 9 },
+  summaryCard: { border: '1 solid #e2e8f0', paddingVertical: 7, paddingHorizontal: 8, borderRadius: 5, flexGrow: 1 },
+  summaryValue: { fontSize: 11, fontWeight: 700, marginTop: 2 },
+  row: { marginBottom: 7, padding: 7, border: '1 solid #e2e8f0', borderRadius: 5 },
+  rowMeta: { color: '#475569', marginBottom: 4, fontSize: 9.3 },
+  rowText: { marginBottom: 3 },
   label: { fontWeight: 700 },
-  hazard: { color: '#b45309', fontWeight: 700, marginTop: 4 },
-  muted: { color: '#64748b' },
-  noteLine: { borderBottom: '1 solid #cbd5e1', marginTop: 8 },
-  footer: { marginTop: 14, borderTop: '1 solid #e2e8f0', paddingTop: 8, color: '#64748b', fontSize: 9 }
+  hazard: { color: '#b45309', fontWeight: 700, marginTop: 4, fontSize: 9.4 },
+  muted: { color: '#64748b', fontSize: 9.2 },
+  noteTitle: { fontWeight: 700, marginBottom: 3 },
+  noteLine: { borderBottom: '1 solid #cbd5e1', marginTop: 7 },
+  signatureLine: { marginTop: 4, fontSize: 9.5 },
+  footer: { marginTop: 12, borderTop: '1 solid #e2e8f0', paddingTop: 7, color: '#64748b', fontSize: 8.8 }
 });
 
 export default function LogsPage() {
@@ -64,16 +71,17 @@ export default function LogsPage() {
           <View style={styles.header}>
             <Text style={styles.brand}>CrewBridge • Premium Bilingual Operations Report</Text>
             <Text style={styles.subtitle}>Field Communication, Safety, and Accountability Summary / Resumen de comunicación, seguridad y responsabilidad</Text>
+            <View style={styles.divider} />
           </View>
 
-          <View style={styles.section}>
-            <Text>Project: {jobName}</Text>
-            <Text>Generated: {now.toLocaleDateString()} {now.toLocaleTimeString()}</Text>
+          <View style={styles.metaSection}>
+            <Text style={styles.metaLine}>Project: {jobName}</Text>
+            <Text style={styles.metaLine}>Generated: {now.toLocaleDateString()} {now.toLocaleTimeString()}</Text>
             <Text style={styles.muted}>Document type: Daily communication record + safety review</Text>
             <View style={styles.summaryGrid}>
-              <View style={styles.summaryCard}><Text style={styles.label}>Entries</Text><Text>{entries.length}</Text></View>
-              <View style={styles.summaryCard}><Text style={styles.label}>Safety alerts</Text><Text>{totalSafetyFlags}</Text></View>
-              <View style={styles.summaryCard}><Text style={styles.label}>Languages</Text><Text>English / Spanish</Text></View>
+              <View style={styles.summaryCard}><Text style={styles.label}>Entries</Text><Text style={styles.summaryValue}>{entries.length}</Text></View>
+              <View style={styles.summaryCard}><Text style={styles.label}>Safety alerts</Text><Text style={styles.summaryValue}>{totalSafetyFlags}</Text></View>
+              <View style={styles.summaryCard}><Text style={styles.label}>Languages</Text><Text style={styles.summaryValue}>English / Spanish</Text></View>
             </View>
           </View>
 
@@ -81,22 +89,21 @@ export default function LogsPage() {
             {entries.map((e) => (
               <View key={e.id} style={styles.row}>
                 <Text style={styles.rowMeta}>{new Date(e.created_at).toLocaleString()} • {e.sender_role}</Text>
-                <Text><Text style={styles.label}>Original / Original:</Text> {e.original_text}</Text>
-                <Text><Text style={styles.label}>Translated / Traducido:</Text> {e.translated_text}</Text>
+                <Text style={styles.rowText}><Text style={styles.label}>Original / Original:</Text> {e.original_text}</Text>
+                <Text style={styles.rowText}><Text style={styles.label}>Translated / Traducido:</Text> {e.translated_text}</Text>
                 {e.safety_flag ? <Text style={styles.hazard}>{safetyWarningText(e)}</Text> : <Text style={styles.muted}>Safety flag: No / Sin alerta</Text>}
               </View>
             ))}
           </View>
 
           <View style={styles.section}>
-            <Text style={styles.label}>Supervisor Notes / Notas del supervisor</Text>
-            <Text style={styles.noteLine}> </Text>
+            <Text style={styles.noteTitle}>Supervisor Notes / Notas del supervisor</Text>
             <Text style={styles.noteLine}> </Text>
             <Text style={styles.noteLine}> </Text>
           </View>
 
-          <Text>Foreman Signature / Firma del encargado: ____________________</Text>
-          <Text style={{ marginTop: 4 }}>Crew Lead Signature / Firma líder de cuadrilla: ____________________</Text>
+          <Text style={styles.signatureLine}>Foreman Signature / Firma del encargado: ____________________</Text>
+          <Text style={styles.signatureLine}>Crew Lead Signature / Firma líder de cuadrilla: ____________________</Text>
 
           <Text style={styles.footer}>Generated by CrewBridge • Bilingual operations platform for construction teams.</Text>
         </Page>
